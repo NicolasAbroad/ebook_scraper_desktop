@@ -17,10 +17,22 @@ public interface Volume {
     void setEbookSource(EbookSource source);
 
     /**
-     * Add a chapter to volume;
+     * Add a chapter to volume.
      * @param chapter
      */
     void addChapter(Chapter chapter);
+
+    /**
+     * Get author.
+     * @return author
+     */
+    String getAuthor();
+
+    /**
+     * Get title.
+     * @return title
+     */
+    String getTitle();
 
     /**
      * Get a list containing all chapters.
