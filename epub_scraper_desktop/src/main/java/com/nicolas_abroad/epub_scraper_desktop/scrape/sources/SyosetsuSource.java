@@ -1,9 +1,13 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape.sources;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 /**
  * Ebook source: syosetsu.com
@@ -14,6 +18,10 @@ public class SyosetsuSource implements EbookSource {
     private static final String AUTHOR_SELECTOR = ".novel_writername > a";
 
     private static final String STORY_TITLE_SELECTOR = "#novel_contents > #novel_color > p.novel_title";
+
+    private static final String CHAPTER_URLS_SELECTOR = "#novel_contents > div#novel_color > div.index_box > .novel_sublist2 > .subtitle > a";
+
+    private static final String HREF_SELECTOR = "href";
 
     public Document parseHTMLDocument(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
@@ -29,7 +37,6 @@ public class SyosetsuSource implements EbookSource {
     }
 
     public String parseVolumeTitle(Document document) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -39,6 +46,20 @@ public class SyosetsuSource implements EbookSource {
     }
 
     public String parseChapterText(Document document) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<String> parseAllChapterUrls(Document document) {
+        List<String> urls = new ArrayList<>();
+        Elements elements = document.select(CHAPTER_URLS_SELECTOR);
+        elements.forEach(element -> {
+            urls.add(element.attr(HREF_SELECTOR));
+        });
+        return urls;
+    }
+
+    public Map<String, List<String>> sortChaptersByVolume(Document document) {
         // TODO Auto-generated method stub
         return null;
     }

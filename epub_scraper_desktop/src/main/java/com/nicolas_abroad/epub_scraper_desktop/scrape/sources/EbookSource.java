@@ -1,6 +1,8 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape.sources;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 
@@ -53,6 +55,20 @@ public interface EbookSource {
      * @return text
      */
     String parseChapterText(Document document);
+
+    /**
+     * Parse chapter urls.
+     * @param document
+     * @return chapter urls
+     */
+    List<String> parseAllChapterUrls(Document document);
+
+    /**
+     * Sort chapters by volume.
+     * @param document
+     * @return chapters sorted by volume
+     */
+    Map<String, List<String>> sortChaptersByVolume(Document document);
 
     /**
      * Parse chapter number.
