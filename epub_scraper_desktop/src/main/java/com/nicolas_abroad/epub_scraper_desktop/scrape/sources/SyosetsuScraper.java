@@ -10,18 +10,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
- * Ebook source: syosetsu.com
+ * Ebook scraper for syosetsu.com
  * @author Nicolas
  */
-public class SyosetsuSource implements EbookSource {
+public class SyosetsuScraper implements EbookScraper {
 
-    private static final String AUTHOR_SELECTOR = ".novel_writername > a";
+    private static final String AUTHOR_SELECTOR = "div.novel_writername > a";
 
-    private static final String STORY_TITLE_SELECTOR = "#novel_contents > #novel_color > p.novel_title";
+    private static final String STORY_TITLE_SELECTOR = "div#novel_contents > div#novel_color > p.novel_title";
 
-    private static final String CHAPTER_URLS_SELECTOR = "#novel_contents > div#novel_color > div.index_box > .novel_sublist2 > .subtitle > a";
+    private static final String CHAPTER_URLS_SELECTOR = "div#novel_contents > div#novel_color > div.index_box > dl.novel_sublist2 > dd.subtitle > a";
 
     private static final String HREF_SELECTOR = "href";
+
+    private static final String VOLUME_TITLES_SELECTOR = "#novel_contents > div#novel_color > div.index_box > div.chapter_title";
 
     public Document parseHTMLDocument(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
@@ -36,8 +38,22 @@ public class SyosetsuSource implements EbookSource {
         return document.selectFirst(STORY_TITLE_SELECTOR).text();
     }
 
-    public String parseVolumeTitle(Document document) {
-        return null;
+    public boolean hasVolumes(Document document) {
+        try {
+            document.selectFirst(VOLUME_TITLES_SELECTOR).hasText();
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public List<String> parseVolumeTitles(Document document) {
+        Elements elements = document.select(VOLUME_TITLES_SELECTOR);
+        List<String> titles = new ArrayList<>();
+        elements.forEach(element -> {
+            titles.add(element.text());
+        });
+        return titles;
     }
 
     public String parseChapterTitle(Document document) {

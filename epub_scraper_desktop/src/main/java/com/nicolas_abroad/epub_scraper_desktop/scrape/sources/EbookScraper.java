@@ -7,11 +7,11 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 
 /**
- * Ebook source interface.
+ * Ebook scraper interface.
  * Sources define which elements have to be scrapped.
  * @author Nicolas
  */
-public interface EbookSource {
+public interface EbookScraper {
 
     /**
      * Parse HTML document.
@@ -36,11 +36,18 @@ public interface EbookSource {
     String parseStoryTitle(Document document);
 
     /**
-     * Parse volume title.
+     * Checks if story has volumes.
      * @param document
-     * @return title
+     * @return true if has volumes
      */
-    String parseVolumeTitle(Document document);
+    boolean hasVolumes(Document document);
+
+    /**
+     * Parse volume titles.
+     * @param document
+     * @return list of volume titles
+     */
+    List<String> parseVolumeTitles(Document document);
 
     /**
      * Parse chapter title.

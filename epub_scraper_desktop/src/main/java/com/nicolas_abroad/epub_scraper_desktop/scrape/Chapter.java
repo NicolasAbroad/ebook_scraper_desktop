@@ -1,6 +1,6 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape;
 
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookSource;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
  * Interface for a single chapter of a volume.
@@ -12,7 +12,7 @@ public interface Chapter {
      * Set chapter's source.
      * @param source
      */
-    void setEbookSource(EbookSource source);
+    void setEbookSource(EbookScraper source);
 
     /**
      * Get chapter number.

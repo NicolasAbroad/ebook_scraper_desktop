@@ -2,7 +2,7 @@ package com.nicolas_abroad.epub_scraper_desktop.scrape;
 
 import java.util.List;
 
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookSource;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
  * Interface for a single volume.
@@ -14,7 +14,7 @@ public interface Volume {
      * Set chapter's source.
      * @param source
      */
-    void setEbookSource(EbookSource source);
+    void setEbookSource(EbookScraper source);
 
     /**
      * Add a chapter to volume.
