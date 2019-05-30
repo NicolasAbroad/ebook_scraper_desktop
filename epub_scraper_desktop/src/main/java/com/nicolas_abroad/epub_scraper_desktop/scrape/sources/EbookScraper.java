@@ -75,7 +75,7 @@ public interface EbookScraper {
      * @param document
      * @return chapters sorted by volume
      */
-    Map<String, List<String>> sortChaptersByVolume(Document document);
+    Map<Integer, List<String>> sortChaptersByVolume(Document document);
 
     /**
      * Parse chapter number.

@@ -25,6 +25,10 @@ public class SyosetsuScraper implements EbookScraper {
 
     private static final String VOLUME_TITLES_SELECTOR = "#novel_contents > div#novel_color > div.index_box > div.chapter_title";
 
+    private static final String CHAPTER_TITLE_SELECTOR = "#novel_contents > div#novel_color > div.novel_bn > p.novel_p";
+
+    private static final String CHAPTER_TEXT_SELECTOR = "div#novel_contents > div#novel_color";
+
     public Document parseHTMLDocument(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
         return document;
@@ -57,13 +61,11 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public String parseChapterTitle(Document document) {
-        // TODO Auto-generated method stub
-        return null;
+        return document.selectFirst(CHAPTER_TITLE_SELECTOR).text();
     }
 
     public String parseChapterText(Document document) {
-        // TODO Auto-generated method stub
-        return null;
+        return document.selectFirst(CHAPTER_TEXT_SELECTOR).outerHtml();
     }
 
     public List<String> parseAllChapterUrls(Document document) {
@@ -75,13 +77,13 @@ public class SyosetsuScraper implements EbookScraper {
         return urls;
     }
 
-    public Map<String, List<String>> sortChaptersByVolume(Document document) {
-        // TODO Auto-generated method stub
+    public Map<Integer, List<String>> sortChaptersByVolume(Document document) {
+        // TODO finish implementation
         return null;
     }
 
     public Integer parseChapterNumber(Document document) {
-        // TODO Auto-generated method stub
+        // TODO finish implementation
         return null;
     }
 
