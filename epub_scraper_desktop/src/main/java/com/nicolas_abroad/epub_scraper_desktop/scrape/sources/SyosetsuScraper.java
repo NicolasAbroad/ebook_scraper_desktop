@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Document.OutputSettings;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.select.Elements;
 
 /**
@@ -30,7 +33,13 @@ public class SyosetsuScraper implements EbookScraper {
     private static final String CHAPTER_TEXT_SELECTOR = "div#novel_contents > div#novel_color";
 
     public Document parseHTMLDocument(String url) throws IOException {
-        Document document = Jsoup.connect(url).get();
+        Document document = Jsoup.connect(url).get().normalise();
+        OutputSettings settings = new OutputSettings();
+        settings.escapeMode(EscapeMode.xhtml);
+        settings.prettyPrint(false);
+        settings.indentAmount(0);
+        settings.charset("UTF-8");
+        document.outputSettings(settings);
         return document;
     }
 
@@ -65,7 +74,12 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public String parseChapterText(Document document) {
-        return document.selectFirst(CHAPTER_TEXT_SELECTOR).outerHtml();
+        StringBuilder text = new StringBuilder();
+        Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
+        for (Element element : allElements) {
+            text.append(element.outerHtml().replaceAll("\u00a0", ""));
+        }
+        return text.toString();
     }
 
     public List<String> parseAllChapterUrls(Document document) {
