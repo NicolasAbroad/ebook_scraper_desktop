@@ -2,6 +2,7 @@ package com.nicolas_abroad.epub_scraper_desktop.scrape.sources;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,19 +19,31 @@ import org.jsoup.select.Elements;
  */
 public class SyosetsuScraper implements EbookScraper {
 
-    private static final String AUTHOR_SELECTOR = "div.novel_writername > a";
+    private static final String AUTHOR_SELECTOR_WITH_LINK = "div#novel_contents > div#novel_color > div.novel_writername > a";
+
+    private static final String AUTHOR_SELECTOR_WITHOUT_LINK = "div#novel_contents > div#novel_color > div.novel_writername";
 
     private static final String STORY_TITLE_SELECTOR = "div#novel_contents > div#novel_color > p.novel_title";
 
     private static final String CHAPTER_URLS_SELECTOR = "div#novel_contents > div#novel_color > div.index_box > dl.novel_sublist2 > dd.subtitle > a";
 
+    private static final String CHAPTER_URLS_CONTAINER = "div#novel_contents > div#novel_color > div.index_box";
+
+    private static final String VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "div.chapter_title";
+
+    private static final String CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER = "dl.novel_sublist2";
+
+    private static final String CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "dd.subtitle > a";
+
     private static final String HREF_SELECTOR = "href";
 
     private static final String VOLUME_TITLES_SELECTOR = "#novel_contents > div#novel_color > div.index_box > div.chapter_title";
 
-    private static final String CHAPTER_TITLE_SELECTOR = "#novel_contents > div#novel_color > div.novel_bn > p.novel_p";
+    private static final String CHAPTER_TITLE_SELECTOR = "#novel_contents > div#novel_color > p.novel_subtitle";
 
     private static final String CHAPTER_TEXT_SELECTOR = "div#novel_contents > div#novel_color";
+
+    private static final String SYSOSETSU_URL = "https://ncode.syosetu.com";
 
     public Document parseHTMLDocument(String url) throws IOException {
         Document document = Jsoup.connect(url).get().normalise();
@@ -44,7 +57,14 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public String parseAuthor(Document document) {
-        return document.selectFirst(AUTHOR_SELECTOR).text();
+        String author = null;
+        try {
+            author = document.selectFirst(AUTHOR_SELECTOR_WITH_LINK).text();
+        } catch (NullPointerException e) {
+            author = document.selectFirst(AUTHOR_SELECTOR_WITHOUT_LINK).text().substring(3);
+        }
+        return author;
+
     }
 
     public String parseStoryTitle(Document document) {
@@ -52,6 +72,7 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public boolean hasVolumes(Document document) {
+        // TODO decide to delete or not
         try {
             document.selectFirst(VOLUME_TITLES_SELECTOR).hasText();
         } catch (NullPointerException e) {
@@ -86,19 +107,23 @@ public class SyosetsuScraper implements EbookScraper {
         List<String> urls = new ArrayList<>();
         Elements elements = document.select(CHAPTER_URLS_SELECTOR);
         elements.forEach(element -> {
-            urls.add(element.attr(HREF_SELECTOR));
+            urls.add(SYSOSETSU_URL + element.attr(HREF_SELECTOR));
         });
         return urls;
     }
 
-    public Map<Integer, List<String>> sortChaptersByVolume(Document document) {
-        // TODO finish implementation
-        return null;
-    }
-
-    public Integer parseChapterNumber(Document document) {
-        // TODO finish implementation
-        return null;
+    public Map<Integer, List<String>> parseChaptersByVolume(Document document) {
+        Map<Integer, List<String>> volumes = new HashMap<Integer, List<String>>();
+        Elements elements = document.selectFirst(CHAPTER_URLS_CONTAINER).children();
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).is(VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
+                volumes.put(volumes.size() + 1, new ArrayList<String>());
+            } else if (elements.get(i).is(CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
+                volumes.get(volumes.size()).add(SYSOSETSU_URL + elements.get(i)
+                        .selectFirst(CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER).attr(HREF_SELECTOR));
+            }
+        }
+        return volumes;
     }
 
 }

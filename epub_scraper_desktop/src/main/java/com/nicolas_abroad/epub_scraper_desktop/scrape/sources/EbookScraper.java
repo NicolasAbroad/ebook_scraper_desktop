@@ -64,24 +64,17 @@ public interface EbookScraper {
     String parseChapterText(Document document);
 
     /**
-     * Parse chapter urls.
+     * Parse chapter urls. Used if story has no volumes.
      * @param document
      * @return chapter urls
      */
     List<String> parseAllChapterUrls(Document document);
 
     /**
-     * Sort chapters by volume.
+     * Parse chapters by volume. Used if story has volumes.
      * @param document
      * @return chapters sorted by volume
      */
-    Map<Integer, List<String>> sortChaptersByVolume(Document document);
-
-    /**
-     * Parse chapter number.
-     * @param document
-     * @return chapter number
-     */
-    Integer parseChapterNumber(Document document);
+    Map<Integer, List<String>> parseChaptersByVolume(Document document);
 
 }
