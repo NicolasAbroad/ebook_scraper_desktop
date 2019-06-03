@@ -2,12 +2,21 @@ package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
 import java.util.List;
 
-import com.nicolas_abroad.epub_scraper_desktop.scrape.Volume;
+import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
 
 public interface Ebook {
 
+    /**
+     * Set ebook's format.
+     * @param EbookFormat
+     */
     void setEbookFormat(EbookFormat EbookFormat);
 
-    void generateEbooks(List<Volume> volumes);
+    /**
+     * Generate all ebooks.
+     * @param url
+     * @return list containing all ebooks
+     */
+    List<Volume> generateEbooks(String url);
 
 }
