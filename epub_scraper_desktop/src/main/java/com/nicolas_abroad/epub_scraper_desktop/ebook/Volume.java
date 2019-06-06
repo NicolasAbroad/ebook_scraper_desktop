@@ -1,42 +1,87 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
- * Interface for a single volume.
+ * Class for a single volume.
  * @author Nicolas
  */
-public interface Volume {
+public class Volume {
+
+    private EbookScraper scraper;
+
+    private List<String> chapterUrls;
+
+    private List<Chapter> chapters = new ArrayList<Chapter>();
+
+    private String author;
+
+    private String title;
 
     /**
-     * Set chapter's source.
-     * @param source
+     * Create a new volume with a scraper and a list of chapter urls.
+     * @param scraper
+     * @param chapterUrls
      */
-    void setEbookSource(EbookScraper source);
-
-    /**
-     * Add a chapter to volume.
-     * @param chapter
-     */
-    void addChapter(Chapter chapter);
+    public Volume(EbookScraper scraper, List<String> chapterUrls) {
+        this.scraper = scraper;
+        this.chapterUrls = chapterUrls;
+    }
 
     /**
      * Get author.
      * @return author
      */
-    String getAuthor();
+    public String getAuthor() {
+        return this.author;
+    }
+
+    /**
+     * Set author.
+     * @param author
+     */
+    public void setAuthor(String author) {
+        this.author = author;
+    };
 
     /**
      * Get title.
      * @return title
      */
-    String getTitle();
+    public String getTitle() {
+        return this.title;
+    }
 
     /**
-     * Get a list containing all chapters.
+     * Set title.
+     * @param title
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    };
+
+    /**
+     * Get list of all chapters.
      * @return list of all chapters
      */
-    List<Chapter> getChapters();
+    public List<Chapter> getChapters() {
+        return chapters;
+    };
+
+    /**
+     * Scrape all chapters.
+     * @throws IOException
+     */
+    public void generate() throws IOException {
+        for (String url : chapterUrls) {
+            Chapter chapter = new Chapter(scraper, url);
+            chapter.generate();
+            this.chapters.add(chapter);
+        }
+    }
+
 }
