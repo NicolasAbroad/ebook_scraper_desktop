@@ -43,6 +43,8 @@ public class SyosetsuScraper implements EbookScraper {
 
     private static final String CHAPTER_TEXT_SELECTOR = "div#novel_contents > div#novel_color";
 
+    private static final String CHAPTER_NUMBER = "div#novel_contents > div#novel_color > div#novel_no";
+
     private static final String SYSOSETSU_URL = "https://ncode.syosetu.com";
 
     public Document parseHTMLDocument(String url) throws IOException {
@@ -72,7 +74,6 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public boolean hasVolumes(Document document) {
-        // TODO decide to delete or not
         try {
             document.selectFirst(VOLUME_TITLES_SELECTOR).hasText();
         } catch (NullPointerException e) {
@@ -124,6 +125,11 @@ public class SyosetsuScraper implements EbookScraper {
             }
         }
         return volumes;
+    }
+
+    public int parseChapterNumber(Document document) {
+        String number = document.selectFirst(CHAPTER_NUMBER).text().split("/")[0];
+        return Integer.parseInt(number);
     }
 
 }

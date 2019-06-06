@@ -77,4 +77,11 @@ public interface EbookScraper {
      */
     Map<Integer, List<String>> parseChaptersByVolume(Document document);
 
+    /**
+     * Parse chapter number.
+     * @param document
+     * @return chapter number
+     */
+    int parseChapterNumber(Document document);
+
 }
