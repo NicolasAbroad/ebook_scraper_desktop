@@ -155,7 +155,6 @@ public class SysosetsuScraperTest {
      */
     @Test
     public void testParseAllChapterUrls() {
-        // TODO finish test
         List<String> expected = new ArrayList<String>();
         expected.add("https://ncode.syosetu.com/n0286ee/1/");
         expected.add("https://ncode.syosetu.com/n0286ee/2/");
@@ -227,4 +226,11 @@ public class SysosetsuScraperTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Test parsing chapter's number.
+     */
+    @Test
+    public void testParseChapterNumber() {
+        assertEquals(scraper.parseChapterNumber(chapter), 1);
+    }
 }
