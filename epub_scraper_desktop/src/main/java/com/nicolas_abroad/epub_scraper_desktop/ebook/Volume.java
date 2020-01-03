@@ -22,6 +22,8 @@ public class Volume {
 
     private String title;
 
+    private String volumeNumberFormatted;
+
     /**
      * Create a new volume with a scraper and a list of chapter urls.
      * @param scraper
@@ -73,7 +75,23 @@ public class Volume {
     };
 
     /**
-     * Scrape all chapters.
+     * Get formatted volume number with leading zeros.
+     * @return volume number
+     */
+    public String getVolumeNumber() {
+        return volumeNumberFormatted;
+    }
+
+    /**
+     * Set formatted volume number with leading zeros.
+     * @param volumeNumber
+     */
+    public void setVolumeNumber(String volumeNumber) {
+        this.volumeNumberFormatted = volumeNumber;
+    }
+
+    /**
+     * Scrape all chapters in the chapter urls list.
      * @throws IOException
      */
     public void generate() throws IOException {

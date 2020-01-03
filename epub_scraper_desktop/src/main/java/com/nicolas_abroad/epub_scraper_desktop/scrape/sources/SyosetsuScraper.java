@@ -96,12 +96,18 @@ public class SyosetsuScraper implements EbookScraper {
     }
 
     public String parseChapterText(Document document) {
+        // Parse text
         StringBuilder text = new StringBuilder();
         Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
         for (Element element : allElements) {
-            text.append(element.outerHtml().replaceAll("\u00a0", ""));
+            // text.append(element.outerHtml().replaceAll("\u00a0", ""));
+            text.append(element.outerHtml());
         }
-        return text.toString();
+
+        // Clean text
+        String chapterText = text.toString();
+        chapterText = cleanChapterText(chapterText);
+        return chapterText;
     }
 
     public List<String> parseAllChapterUrls(Document document) {
@@ -113,7 +119,7 @@ public class SyosetsuScraper implements EbookScraper {
         return urls;
     }
 
-    public Map<Integer, List<String>> parseChaptersByVolume(Document document) {
+    public Map<Integer, List<String>> parseChapterUrlsByVolume(Document document) {
         Map<Integer, List<String>> volumes = new HashMap<Integer, List<String>>();
         Elements elements = document.selectFirst(CHAPTER_URLS_CONTAINER).children();
         for (int i = 0; i < elements.size(); i++) {
@@ -130,6 +136,15 @@ public class SyosetsuScraper implements EbookScraper {
     public int parseChapterNumber(Document document) {
         String number = document.selectFirst(CHAPTER_NUMBER).text().split("/")[0];
         return Integer.parseInt(number);
+    }
+
+    private String cleanChapterText(String text) {
+        text = text.replaceAll("\u00a0", "");
+        text = text.replaceAll("<br>", "<br></br>");
+        text = text.replaceAll("<img>", "<img></img>");
+        text = text.replaceAll("border[\\w\\W]*\"", "");
+        text = text.replaceAll("<img(.*?)>", "<img$1></img>");
+        return text;
     }
 
 }

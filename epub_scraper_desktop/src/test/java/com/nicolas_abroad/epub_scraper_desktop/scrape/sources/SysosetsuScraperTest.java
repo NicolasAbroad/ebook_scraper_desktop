@@ -222,7 +222,7 @@ public class SysosetsuScraperTest {
         expected.put(7, volume7);
         expected.put(8, volume8);
 
-        Map<Integer, List<String>> actual = scraper.parseChaptersByVolume(volumeDocument);
+        Map<Integer, List<String>> actual = scraper.parseChapterUrlsByVolume(volumeDocument);
         assertEquals(expected, actual);
     }
 
