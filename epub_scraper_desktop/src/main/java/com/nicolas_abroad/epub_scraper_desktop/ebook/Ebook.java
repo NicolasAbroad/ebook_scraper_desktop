@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
 
+/**
+ * Interface for Ebooks
+ * @author Nicolas
+ */
 public interface Ebook {
 
     /**

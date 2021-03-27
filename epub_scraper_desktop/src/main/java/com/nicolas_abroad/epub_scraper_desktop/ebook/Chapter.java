@@ -22,10 +22,6 @@ public class Chapter {
 
     private String text;
 
-    private static final String CARRIAGE_RETURN_KEY = "\r";
-
-    private static final String NEW_LINE_KEY = "\n";
-
     /**
      * Create a new chapter with a scraper and a url.
      * @param scraper

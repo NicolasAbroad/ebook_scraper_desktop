@@ -12,7 +12,7 @@ public class InputChecking {
     private InputChecking() {
     }
 
-    private static final String SYSOSETSU_URL_REGEX = "^((https://)||(http://))?(ncode.syosetu.com/n)(\\d{4})([a-z]{2})(/)?$";
+    private static final String SYSOSETSU_URL_REGEX = "^((https://)||(http://))?(ncode.syosetu.com/n)(\\d{4})([a-z]{1,2})(/)?$";
 
     private static final String[] URL_REGEXES = { SYSOSETSU_URL_REGEX };
 

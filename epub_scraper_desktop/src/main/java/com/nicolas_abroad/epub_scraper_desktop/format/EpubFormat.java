@@ -250,23 +250,22 @@ public class EpubFormat implements EbookFormat {
     // ----------------------------------------------------------
     // extension types
     // ----------------------------------------------------------
-    private static final String XML_EXTENSION_TYPE = ".xml";
+    private static final class EXTENSION_TYPE {
+        private static final String XML = ".xml";
+        private static final String XHTML = ".xhtml";
+        private static final String OPF = ".opf";
+        private static final String NCX = ".ncx";
+        private static final String CSS = ".css";
+        private static final String XPGT = ".xpgt";
+        private static final String EPUB = ".epub";
+    }
 
-    private static final String XHTML_EXTENSION_TYPE = ".xhtml";
-
-    private static final String OPF_EXTENSION_TYPE = ".opf";
-
-    private static final String NCX_EXTENSION_TYPE = ".ncx";
-
-    private static final String CSS_EXTENSION_TYPE = ".css";
-
-    private static final String XPGT_EXTENSION_TYPE = ".xpgt";
-
-    private static final String EPUB_EXTENSION_TYPE = ".epub";
-
+    // ----------------------------------------------------------
+    // file generation
+    // ----------------------------------------------------------
     @Override
     public void generate(Volume volume) throws IOException {
-        String fileName = volume.getTitle() + EPUB_EXTENSION_TYPE;
+        String fileName = volume.getTitle() + EXTENSION_TYPE.EPUB;
         File epubFile = new File(fileName);
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(
                 new BufferedOutputStream(new FileOutputStream(epubFile)))) {
@@ -360,7 +359,7 @@ public class EpubFormat implements EbookFormat {
      * @return container file path
      */
     public String generateContainerPath() {
-        return META_INF_FOLDER + CONTAINER_TITLE + XML_EXTENSION_TYPE;
+        return META_INF_FOLDER + CONTAINER_TITLE + EXTENSION_TYPE.XML;
     }
 
     /**
@@ -379,7 +378,7 @@ public class EpubFormat implements EbookFormat {
      * @return content file path
      */
     public String generateContentPath() {
-        return OEBPS_FOLDER + CONTENT_TITLE + OPF_EXTENSION_TYPE;
+        return OEBPS_FOLDER + CONTENT_TITLE + EXTENSION_TYPE.OPF;
     }
 
     /**
@@ -432,7 +431,7 @@ public class EpubFormat implements EbookFormat {
      * @return toc file path
      */
     public String generateTocPath() {
-        return OEBPS_FOLDER + TOC_TITLE + NCX_EXTENSION_TYPE;
+        return OEBPS_FOLDER + TOC_TITLE + EXTENSION_TYPE.NCX;
     }
 
     /**
@@ -480,7 +479,7 @@ public class EpubFormat implements EbookFormat {
      * @return chapter file path
      */
     public String generateChapterPath(Chapter chapter) {
-        return OEBPS_FOLDER + "c" + chapter.getChapterNumber() + XHTML_EXTENSION_TYPE;
+        return OEBPS_FOLDER + "c" + chapter.getChapterNumber() + EXTENSION_TYPE.XHTML;
     }
 
     /**
@@ -521,7 +520,7 @@ public class EpubFormat implements EbookFormat {
      * @return css file path
      */
     public String generateCssPath() {
-        return OEBPS_FOLDER + CSS_TITLE + CSS_EXTENSION_TYPE;
+        return OEBPS_FOLDER + CSS_TITLE + EXTENSION_TYPE.CSS;
     }
 
     /**
@@ -548,7 +547,7 @@ public class EpubFormat implements EbookFormat {
      * @return page template file path
      */
     public String generatePageTemplatePath() {
-        return OEBPS_FOLDER + PAGE_TEMPLATE_TITLE + XPGT_EXTENSION_TYPE;
+        return OEBPS_FOLDER + PAGE_TEMPLATE_TITLE + EXTENSION_TYPE.XPGT;
     }
 
     /**
@@ -575,7 +574,7 @@ public class EpubFormat implements EbookFormat {
      * @return nav file path
      */
     public String generateNavPath() {
-        return OEBPS_FOLDER + NAV_TITLE + XHTML_EXTENSION_TYPE;
+        return OEBPS_FOLDER + NAV_TITLE + EXTENSION_TYPE.XHTML;
     }
 
     /**

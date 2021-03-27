@@ -13,8 +13,6 @@ import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -39,27 +37,28 @@ public class MainWindow extends Application {
 
     private static final String SCRAPE_BUTTON_LABEL = "Scrape";
 
-    private static final String INCORRECT_INPUT_MSG = "Please input a correct url.";
+    private static final class MSG {
+        private static final String INCORRECT_INPUT = "Please input a correct url.";
+        private static final String SCRAPING = "Please wait a moment while the app is scraping.";
+        private static final String FINISHED = "The app has finished scraping.";
+    }
 
-    private static final String SCRAPING_MSG = "Please wait a moment while the app is scraping.";
+    private static final class WINDOW_SIZE {
+        private static final int WIDTH = 500;
+        private static final int HEIGHT = 200;
+    }
 
-    private static final String FINISHED_MSG = "The app has finished scraping.";
+    private static final class GAP {
+        private static final int HORIZONTAL = 10;
+        private static final int VERTICAL = 10;
+    }
 
-    private static final int WINDOW_WIDTH = 500;
-
-    private static final int WINDOW_HEIGHT = 200;
-
-    private static final int HORIZONTAL_GAP = 10;
-
-    private static final int VERTICAL_GAP = 10;
-
-    private static final int TOP_OFFSET = 25;
-
-    private static final int RIGHT_OFFSET = 25;
-
-    private static final int BOTTOM_OFFSET = 25;
-
-    private static final int LEFT_OFFSET = 25;
+    private static final class OFFSET {
+        private static final int TOP = 25;
+        private static final int RIGHT = 25;
+        private static final int BOTTOM = 25;
+        private static final int LEFT = 25;
+    }
 
     private static final int TEXT_WIDTH = 30;
 
@@ -69,9 +68,9 @@ public class MainWindow extends Application {
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.TOP_LEFT);
-        grid.setHgap(HORIZONTAL_GAP);
-        grid.setVgap(VERTICAL_GAP);
-        grid.setPadding(new Insets(TOP_OFFSET, RIGHT_OFFSET, BOTTOM_OFFSET, LEFT_OFFSET));
+        grid.setHgap(GAP.HORIZONTAL);
+        grid.setVgap(GAP.VERTICAL);
+        grid.setPadding(new Insets(OFFSET.TOP, OFFSET.RIGHT, OFFSET.BOTTOM, OFFSET.LEFT));
 
         generateTitle(grid);
         generateUrlLabel(grid);
@@ -79,7 +78,7 @@ public class MainWindow extends Application {
         generateScrapeButton(grid, inputTextField);
         generateTextMessage(grid);
 
-        Scene scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Scene scene = new Scene(grid, WINDOW_SIZE.WIDTH, WINDOW_SIZE.HEIGHT);
         primaryStage.setScene(scene);
 
         primaryStage.show();
@@ -92,6 +91,10 @@ public class MainWindow extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    // -------------------------------
+    // Generate window elements
+    // -------------------------------
 
     /**
      * Generate title element to be added to the window grid.
@@ -142,31 +145,7 @@ public class MainWindow extends Application {
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 2);
-
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    if (InputChecking.isIncorrectUrl(textField.getText())) {
-                        // inputted index url is incorrect
-                        modifyTextMessage(grid, INCORRECT_INPUT_MSG);
-                        return;
-                    }
-                    modifyTextMessage(grid, SCRAPING_MSG);
-                    executeScraping(textField);
-                    modifyTextMessage(grid, FINISHED_MSG);
-                } catch (IOException e) {
-                    try {
-                        PrintWriter pw = new PrintWriter(LocalDateTime.now().toString() + ".txt");
-                        e.printStackTrace(pw);
-                        pw.close();
-                    } catch (Exception e1) {
-                    }
-                }
-            }
-        });
-
+        btn.setOnAction(event -> setScrapeButtonAction(grid, textField));
         return btn;
     }
 
@@ -179,6 +158,30 @@ public class MainWindow extends Application {
         grid.add(text, 1, 3);
     }
 
+    // -------------------------------
+    // Button actions
+    // -------------------------------
+
+    /**
+     * Set scrape button action.
+     * @param grid
+     * @param textField
+     */
+    private static void setScrapeButtonAction(GridPane grid, TextField textField) {
+        if (InputChecking.isIncorrectUrl(textField.getText())) {
+            // inputted index url is incorrect
+            modifyTextMessage(grid, MSG.INCORRECT_INPUT);
+            return;
+        }
+        modifyTextMessage(grid, MSG.SCRAPING);
+        executeScraping(textField);
+        modifyTextMessage(grid, MSG.FINISHED);
+    }
+
+    // -------------------------------
+    // Scrape button methods
+    // -------------------------------
+
     /**
      * Modify text message panel in the window grid.
      * @param grid
@@ -189,6 +192,13 @@ public class MainWindow extends Application {
         text.setText(textMessage);
     }
 
+    /**
+     * Get node from grid pane.
+     * @param grid
+     * @param col
+     * @param row
+     * @return
+     */
     private static Node getNodeFromGridPane(GridPane grid, int col, int row) {
         for (Node node : grid.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -201,20 +211,31 @@ public class MainWindow extends Application {
     /**
      * Execute scraping related functions.
      * @param textField
-     * @throws IOException
+     * @return whether scrapping completed successfully
      */
-    public static void executeScraping(TextField textField) throws IOException {
-        EbookScraper scraper = new SyosetsuScraper();
-        String url = textField.getText();
+    public static boolean executeScraping(TextField textField) {
+        try {
+            EbookScraper scraper = new SyosetsuScraper();
+            String url = textField.getText();
+            System.out.println(url);
 
-        // Scrape all data from url
-        Story story = new Story(scraper, url);
-        story.generate();
+            // Scrape all data from url
+            Story story = new Story(scraper, url);
+            story.generate();
 
-        // Generate volumes from scrapped data
-        EbookFormat ebookFormat = new EpubFormat();
-        for (Volume volume : story.getVolumes()) {
-            ebookFormat.generate(volume);
+            // Generate volumes from scrapped data
+            EbookFormat ebookFormat = new EpubFormat();
+            for (Volume volume : story.getVolumes()) {
+                System.out.println(volume.getTitle());
+                ebookFormat.generate(volume);
+            }
+            return true;
+        } catch (IOException e) {
+            try (PrintWriter pw = new PrintWriter(LocalDateTime.now().toString() + ".txt")) {
+                e.printStackTrace(pw);
+            } catch (Exception e2) {
+            }
+            return false;
         }
     }
 
