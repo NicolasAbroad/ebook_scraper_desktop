@@ -13,6 +13,7 @@ import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -40,6 +41,7 @@ public class MainWindow extends Application {
     private static final class MSG {
         private static final String INCORRECT_INPUT = "Please input a correct url.";
         private static final String SCRAPING = "Please wait a moment while the app is scraping.";
+        private static final String ERROR = "An error occured while scraping.";
         private static final String FINISHED = "The app has finished scraping.";
     }
 
@@ -61,6 +63,18 @@ public class MainWindow extends Application {
     }
 
     private static final int TEXT_WIDTH = 30;
+
+    /**
+     * Launch program.
+     * @param args
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    // -------------------------------
+    // Update GUI
+    // -------------------------------
 
     @Override
     public void start(Stage primaryStage) {
@@ -85,23 +99,11 @@ public class MainWindow extends Application {
     }
 
     /**
-     * Launch program.
-     * @param args
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    // -------------------------------
-    // Generate window elements
-    // -------------------------------
-
-    /**
      * Generate title element to be added to the window grid.
      * @param grid
      * @return title
      */
-    public static Text generateTitle(GridPane grid) {
+    private static Text generateTitle(GridPane grid) {
         String TITLE = STAGE_TITLE;
         Text scenetitle = new Text(TITLE);
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -114,7 +116,7 @@ public class MainWindow extends Application {
      * @param grid
      * @return url label text
      */
-    public static Label generateUrlLabel(GridPane grid) {
+    private static Label generateUrlLabel(GridPane grid) {
         String TEXT_BOX_LABEL = "URL:";
         Label userName = new Label(TEXT_BOX_LABEL);
         grid.add(userName, 0, 1);
@@ -126,7 +128,7 @@ public class MainWindow extends Application {
      * @param grid
      * @return url input text box
      */
-    public static TextField generateUrlTextBox(GridPane grid) {
+    private static TextField generateUrlTextBox(GridPane grid) {
         TextField userTextField = new TextField();
         userTextField.setPrefColumnCount(TEXT_WIDTH);
         grid.add(userTextField, 1, 1);
@@ -139,7 +141,7 @@ public class MainWindow extends Application {
      * @param textField
      * @return scraping button
      */
-    public static Button generateScrapeButton(GridPane grid, TextField textField) {
+    private static Button generateScrapeButton(GridPane grid, TextField textField) {
         Button btn = new Button(SCRAPE_BUTTON_LABEL);
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -153,7 +155,7 @@ public class MainWindow extends Application {
      * Generate text message panel to be added to the window grid.
      * @param grid
      */
-    public static void generateTextMessage(GridPane grid) {
+    private static void generateTextMessage(GridPane grid) {
         Text text = new Text();
         grid.add(text, 1, 3);
     }
@@ -168,19 +170,40 @@ public class MainWindow extends Application {
      * @param textField
      */
     private static void setScrapeButtonAction(GridPane grid, TextField textField) {
+        // Url check
         if (InputChecking.isIncorrectUrl(textField.getText())) {
             // inputted index url is incorrect
-            modifyTextMessage(grid, MSG.INCORRECT_INPUT);
+            updateMessage(grid, MSG.INCORRECT_INPUT);
             return;
         }
-        modifyTextMessage(grid, MSG.SCRAPING);
-        executeScraping(textField);
-        modifyTextMessage(grid, MSG.FINISHED);
+
+        updateMessage(grid, MSG.SCRAPING);
+
+        Thread thread = new Thread(() -> {
+            boolean executedCorrectly = executeScraping(textField);
+            if (!executedCorrectly) {
+                modifyTextMessage(grid, MSG.ERROR);
+                return;
+            }
+
+            updateMessage(grid, MSG.FINISHED);
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     // -------------------------------
     // Scrape button methods
     // -------------------------------
+
+    private static void updateMessage(GridPane grid, String textMessage) {
+        Thread thread = new Thread(() -> {
+            Runnable updater = () -> modifyTextMessage(grid, textMessage);
+            Platform.runLater(updater);
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
 
     /**
      * Modify text message panel in the window grid.
@@ -213,7 +236,7 @@ public class MainWindow extends Application {
      * @param textField
      * @return whether scrapping completed successfully
      */
-    public static boolean executeScraping(TextField textField) {
+    private static boolean executeScraping(TextField textField) {
         try {
             EbookScraper scraper = new SyosetsuScraper();
             String url = textField.getText();
@@ -229,12 +252,14 @@ public class MainWindow extends Application {
                 System.out.println(volume.getTitle());
                 ebookFormat.generate(volume);
             }
+
             return true;
         } catch (IOException e) {
             try (PrintWriter pw = new PrintWriter(LocalDateTime.now().toString() + ".txt")) {
                 e.printStackTrace(pw);
             } catch (Exception e2) {
             }
+
             return false;
         }
     }
