@@ -100,8 +100,8 @@ public class SyosetsuScraper implements EbookScraper {
         StringBuilder text = new StringBuilder();
         Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
         for (Element element : allElements) {
-            // text.append(element.outerHtml().replaceAll("\u00a0", ""));
-            text.append(element.outerHtml());
+            text.append(element.outerHtml().replaceAll("\u00a0", ""));
+            // text.append(element.outerHtml());
         }
 
         // Clean text
@@ -142,7 +142,7 @@ public class SyosetsuScraper implements EbookScraper {
         text = text.replaceAll("\u00a0", "");
         text = text.replaceAll("<br>", "<br></br>");
         text = text.replaceAll("<img>", "<img></img>");
-        text = text.replaceAll("border[\\w\\W]*\"", "");
+        text = text.replaceAll("border[\\w\\W].*?\"[\\w\\W]*?\"", "");
         text = text.replaceAll("<img(.*?)>", "<img$1></img>");
         return text;
     }
