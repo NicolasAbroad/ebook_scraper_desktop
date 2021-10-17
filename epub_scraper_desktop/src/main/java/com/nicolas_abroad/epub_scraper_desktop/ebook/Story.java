@@ -24,6 +24,8 @@ public class Story {
 
     private List<Volume> volumes = new ArrayList<Volume>();
 
+    private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*]";
+
     /**
      * Create a new story with a scraper and a url.
      * @param scraper
@@ -81,13 +83,21 @@ public class Story {
         } else {
             // if volumes exist on index page
             for (int i = 0; i < volumeTitles.size(); i++) {
+                // Get title & clean out unwanted characters
                 String title = volumeTitles.get(i);
+                String cleanTitle = title.replaceAll(TITLE_CLEAN_REGEX, "");
+
+                // Set volume title
                 Volume volume = this.volumes.get(i);
-                volume.setTitle(volume.getVolumeNumber() + " - " + title);
+                volume.setTitle(volume.getVolumeNumber() + " - " + cleanTitle);
             }
         }
     }
 
+    /**
+     * Assign author to volume.
+     * @param document HTML document
+     */
     private void assignVolumeAuthor(Document document) {
         String author = scraper.parseAuthor(document);
         for (int i = 0; i < volumes.size(); i++) {
