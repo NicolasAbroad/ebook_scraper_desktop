@@ -101,7 +101,6 @@ public class SyosetsuScraper implements EbookScraper {
         Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
         for (Element element : allElements) {
             text.append(element.outerHtml().replaceAll("\u00a0", ""));
-            // text.append(element.outerHtml());
         }
 
         // Clean text

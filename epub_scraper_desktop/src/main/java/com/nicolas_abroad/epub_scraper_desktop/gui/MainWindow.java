@@ -1,8 +1,12 @@
 package com.nicolas_abroad.epub_scraper_desktop.gui;
 
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Story;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
@@ -254,10 +258,17 @@ public class MainWindow extends Application {
             }
 
             return true;
-        } catch (IOException e) {
-            try (PrintWriter pw = new PrintWriter(LocalDateTime.now().toString() + ".txt")) {
-                e.printStackTrace(pw);
-            } catch (Exception e2) {
+        } catch (Exception e) {
+            try {
+                String pathString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss")) + ".txt";
+                Path path = Paths.get(pathString);
+
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionString = sw.toString();
+
+                Files.write(path, exceptionString.getBytes());
+            } catch (Exception e1) {
             }
 
             return false;
