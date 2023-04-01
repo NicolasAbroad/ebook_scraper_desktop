@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.nodes.Document;
 
 /**
@@ -11,7 +12,7 @@ import org.jsoup.nodes.Document;
  * Sources define which elements have to be scrapped.
  * @author Nicolas
  */
-public interface EbookScraper {
+public abstract class EbookScraper {
 
     /**
      * Parse HTML document.
@@ -19,69 +20,82 @@ public interface EbookScraper {
      * @return HTML document
      * @throws IOException
      */
-    Document parseHTMLDocument(String url) throws IOException;
+    public abstract Document parseHTMLDocument(String url) throws IOException;
 
     /**
      * Parse author.
      * @param document
      * @return author
      */
-    String parseAuthor(Document document);
+    public abstract String parseAuthor(Document document);
 
     /**
      * Parse story title.
      * @param document
      * @return title
      */
-    String parseStoryTitle(Document document);
+    public abstract String parseStoryTitle(Document document);
 
     /**
      * Checks if story has volumes.
      * @param document
      * @return true if has volumes
      */
-    boolean hasVolumes(Document document);
+    public abstract boolean hasVolumes(Document document);
 
     /**
      * Parse volume titles.
      * @param document
      * @return list of volume titles
      */
-    List<String> parseVolumeTitles(Document document);
+    public abstract List<String> parseVolumeTitles(Document document);
 
     /**
      * Parse chapter title.
      * @param document
      * @return title
      */
-    String parseChapterTitle(Document document);
+    public abstract String parseChapterTitle(Document document);
 
     /**
      * Parse chapter text.
      * @param document
      * @return text
      */
-    String parseChapterText(Document document);
+    public abstract String parseChapterText(Document document);
 
     /**
      * Parse chapter urls. Used if story has no volumes.
      * @param document
      * @return chapter urls
      */
-    List<String> parseAllChapterUrls(Document document);
+    public abstract List<String> parseAllChapterUrls(Document document);
 
     /**
      * Parse chapters by volume. Used if story has volumes.
      * @param document
      * @return chapters sorted by volume
      */
-    Map<Integer, List<String>> parseChapterUrlsByVolume(Document document);
+    public abstract Map<Integer, List<String>> parseChapterUrlsByVolume(Document document);
 
     /**
      * Parse chapter number.
      * @param document
      * @return chapter number
      */
-    int parseChapterNumber(Document document);
+    public abstract int parseChapterNumber(Document document);
+
+    static String cleanChapterTitle(String title) {
+        return StringEscapeUtils.escapeHtml4(title);
+    }
+
+    static String cleanChapterText(String text) {
+        text = text.replaceAll("\u00a0", "");
+        text = text.replaceAll("<br>", "<br></br>");
+        text = text.replaceAll("<img>", "<img></img>");
+        text = text.replaceAll("border[\\w\\W].*?\"[\\w\\W]*?\"", "");
+        text = text.replaceAll("<img(.*?)>", "<img$1></img>");
+        return text;
+    }
 
 }

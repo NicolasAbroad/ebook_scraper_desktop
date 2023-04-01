@@ -12,9 +12,8 @@ import com.nicolas_abroad.epub_scraper_desktop.ebook.Story;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
 import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
 import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
-import com.nicolas_abroad.epub_scraper_desktop.input.InputChecking;
+import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -174,8 +173,12 @@ public class MainWindow extends Application {
      * @param textField
      */
     private static void setScrapeButtonAction(GridPane grid, TextField textField) {
+        String url = textField.getText();
+        InputParser inputParser = InputParser.getInputParser();
+        inputParser.processUrl(url);
+
         // Url check
-        if (InputChecking.isIncorrectUrl(textField.getText())) {
+        if (!inputParser.isValidUrl()) {
             // inputted index url is incorrect
             updateMessage(grid, MSG.INCORRECT_INPUT);
             return;
@@ -242,11 +245,12 @@ public class MainWindow extends Application {
      */
     private static boolean executeScraping(TextField textField) {
         try {
-            EbookScraper scraper = new SyosetsuScraper();
             String url = textField.getText();
             System.out.println(url);
 
             // Scrape all data from url
+            InputParser inputParser = InputParser.getInputParser();
+            EbookScraper scraper = inputParser.getEbookScraper();
             Story story = new Story(scraper, url);
             story.generate();
 

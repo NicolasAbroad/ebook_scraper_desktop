@@ -41,6 +41,14 @@ public class Chapter {
     }
 
     /**
+     * Set chapter number.
+     * @param chapterNumber
+     */
+    public void setChapterNumber(int chapterNumber) {
+        this.chapterNumber = chapterNumber;
+    }
+
+    /**
      * Get chapter title.
      * @return chapter title
      */

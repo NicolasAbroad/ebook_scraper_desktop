@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Document;
 
@@ -49,9 +50,7 @@ public class Story {
         }
     }
 
-    /**
-     * Populate volumes list with unscrapped volume urls.
-     */
+    /** Populate volumes list with unscrapped volume urls. */
     private void populateVolumes() {
         for (Integer key : volumeUrls.keySet()) {
             Volume volume = new Volume(scraper, volumeUrls.get(key));
@@ -59,9 +58,7 @@ public class Story {
         }
     }
 
-    /**
-     * Assign each volume its formatted volume number.
-     */
+    /** Assign each volume its formatted volume number. */
     private void assignVolumeNumbers() {
         int numberZeros = String.valueOf(volumes.size()).length();
         for (int i = 0; i < volumes.size(); i++) {
@@ -79,17 +76,31 @@ public class Story {
         if (volumeTitles == null || volumeTitles.isEmpty()) {
             // if no volumes exist on index page
             Volume volume = this.volumes.get(0);
-            volume.setTitle(scraper.parseStoryTitle(document));
+
+            // Get title & clean out unwanted characters
+            String title = scraper.parseStoryTitle(document);
+            String cleanTitle = title.replaceAll(TITLE_CLEAN_REGEX, "");
+
+            // Set volume title
+            volume.setTitle(cleanTitle);
         } else {
             // if volumes exist on index page
+            if (this.volumes.size() != volumeTitles.size()) {
+                // Assign name to the first volume if none is assigned
+                // In Kakuyomu the first volume can not have a name assigned
+                String title = "";
+                volumeTitles.add(0, title);
+            }
+
             for (int i = 0; i < volumeTitles.size(); i++) {
                 // Get title & clean out unwanted characters
                 String title = volumeTitles.get(i);
-                String cleanTitle = title.replaceAll(TITLE_CLEAN_REGEX, "");
+                title = title.replaceAll(TITLE_CLEAN_REGEX, "");
 
                 // Set volume title
                 Volume volume = this.volumes.get(i);
-                volume.setTitle(volume.getVolumeNumber() + " - " + cleanTitle);
+                String finalTitle = title.isBlank() ? "" : (" - " + title);
+                volume.setTitle(volume.getVolumeNumber() + finalTitle);
             }
         }
     }
@@ -102,6 +113,26 @@ public class Story {
         String author = scraper.parseAuthor(document);
         for (int i = 0; i < volumes.size(); i++) {
             volumes.get(i).setAuthor(author);
+        }
+    }
+
+    /** Assign each chapter its number, if chapter number was not scraped. */
+    private void assignNonScrapedChapterNumbers() {
+        List<Chapter> chapters = volumes.stream().map(v -> v.getChapters()).flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        // Check if chapter numbers were scraped
+        long count = chapters.stream().filter(c -> c.getChapterNumber() == -1).count();
+        if (chapters.size() != count) {
+            return;
+        }
+
+        // Assign chapter numbers
+        for (int i = 0; i < chapters.size(); i++) {
+            Chapter chapter = chapters.get(i);
+            if (chapter.getChapterNumber() == -1) {
+                chapter.setChapterNumber(i + 1);
+            }
         }
     }
 
@@ -119,6 +150,7 @@ public class Story {
         for (Volume volume : volumes) {
             volume.generate();
         }
+        assignNonScrapedChapterNumbers();
     }
 
     /**
