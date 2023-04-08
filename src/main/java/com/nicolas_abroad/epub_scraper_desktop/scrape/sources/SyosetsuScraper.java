@@ -170,11 +170,6 @@ public class SyosetsuScraper extends EbookScraper {
         StringBuilder text = new StringBuilder();
         Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
         for (Element element : allElements) {
-            // Remove links from buttons
-            if (element.className().contains("novel_bn")) {
-                element.child(0).removeAttr("href");
-            }
-
             // Remove advertising
             if (element.className().contains("koukoku")) {
                 continue;

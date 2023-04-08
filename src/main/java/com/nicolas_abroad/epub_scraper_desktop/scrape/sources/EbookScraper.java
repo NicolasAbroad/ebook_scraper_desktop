@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.nodes.Document;
 
 /**
@@ -86,15 +85,22 @@ public abstract class EbookScraper {
     public abstract int parseChapterNumber(Document document);
 
     static String cleanChapterTitle(String title) {
-        return StringEscapeUtils.escapeHtml4(title);
+        title = title.replaceAll("&", "&amp;");
+        title = title.replaceAll("<", "&lt;");
+        title = title.replaceAll(">", "&gt;");
+        // title = StringEscapeUtils.escapeHtml4(title);
+        return title;
     }
 
     static String cleanChapterText(String text) {
         text = text.replaceAll("\u00a0", "");
         text = text.replaceAll("<br>", "<br></br>");
-        text = text.replaceAll("<img>", "<img></img>");
         text = text.replaceAll("border[\\w\\W].*?\"[\\w\\W]*?\"", "");
-        text = text.replaceAll("<img(.*?)>", "<img$1></img>");
+        // Remove img tags
+        text = text.replaceAll("<img(.*?)>", "");
+        // Clear a tag attributes
+        text = text.replaceAll(" href=\".*?\"", "");
+        text = text.replaceAll(" target=\"_blank\"", "");
         return text;
     }
 

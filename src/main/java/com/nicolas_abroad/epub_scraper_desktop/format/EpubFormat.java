@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -230,14 +231,16 @@ public class EpubFormat implements EbookFormat {
     // ----------------------------------------------------------
     private static final String NAV_TITLE = "nav";
 
-    private static final String NAV_TEXT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator()
+    private static final String NAV_TEXT_TOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator()
             + "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xml:lang=\"en-US\" lang=\"en-US\">"
             + System.lineSeparator() + "    <head>" + System.lineSeparator()
             + "        <title>EPUB 3 Navigation Document</title>" + System.lineSeparator()
             + "        <meta charset=\"utf-8\"/>" + System.lineSeparator()
             + "        <link rel=\"horizontal\" type=\"text/css\" href=\"horizontal.css\"/>" + System.lineSeparator()
             + "    </head>" + System.lineSeparator() + "    <body>" + System.lineSeparator()
-            + "        <nav epub:type=\"toc\" id=\"toc\"><ol></ol></nav>" + System.lineSeparator() + "    </body>"
+            + "        <nav epub:type=\"toc\" id=\"toc\"><ol>" + System.lineSeparator();
+
+    private static final String NAV_TEXT_BOTTOM = "</ol></nav>" + System.lineSeparator() + "    </body>"
             + System.lineSeparator() + "</html>";
 
     // ----------------------------------------------------------
@@ -274,7 +277,7 @@ public class EpubFormat implements EbookFormat {
             generateMimetype(zipOutputStream);
             generateContainer(zipOutputStream);
             generateCss(zipOutputStream);
-            generateNav(zipOutputStream);
+            generateNav(zipOutputStream, volume);
             generatePageTemplate(zipOutputStream);
 
             // generate indexing files
@@ -453,7 +456,7 @@ public class EpubFormat implements EbookFormat {
         sb.append(TOC_TEXT_NAVMAP_TOP);
         for (int i = 0; i < volume.getChapters().size(); i++) {
             Chapter chapter = volume.getChapters().get(i);
-            sb.append(String.format(TOC_TEXT_NAVMAP_NAVPOINT, "c" + chapter.getChapterNumber(), i,
+            sb.append(String.format(TOC_TEXT_NAVMAP_NAVPOINT, "c" + chapter.getChapterNumber(), i + 1,
                     "c" + chapter.getChapterNumber(), "c" + chapter.getChapterNumber()));
         }
         sb.append(TOC_TEXT_NAVMAP_BOTTOM);
@@ -579,20 +582,42 @@ public class EpubFormat implements EbookFormat {
 
     /**
      * Generate nav file content.
+     * @param volume
      * @return nav file content
      */
-    public String generateNavText() {
-        return NAV_TEXT;
+    public String generateNavText(Volume volume) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(NAV_TEXT_TOP);
+
+        String tab = "    ";
+        List<Chapter> chapters = volume.getChapters();
+        for (int i = 0; i < chapters.size(); i++) {
+            Chapter chapter = chapters.get(i);
+            sb.append(tab + tab + tab + "<li>");
+            sb.append(System.lineSeparator());
+            sb.append(tab + tab + tab + tab + "<a href=\"c" + chapter.getChapterNumber() + ".xhtml\">");
+            sb.append(System.lineSeparator());
+            sb.append(tab + tab + tab + tab + tab + chapter.getChapterNumber() + " - " + chapter.getTitle());
+            sb.append(System.lineSeparator());
+            sb.append(tab + tab + tab + tab + "</a>");
+            sb.append(System.lineSeparator());
+            sb.append(tab + tab + tab + "</li>");
+            sb.append(System.lineSeparator());
+        }
+
+        sb.append(NAV_TEXT_BOTTOM);
+        return sb.toString();
     }
 
     /**
      * Generate nav file.
      * @param zipOutputStream
+     * @param volume
      * @throws IOException
      */
-    public void generateNav(ZipOutputStream zipOutputStream) throws IOException {
+    public void generateNav(ZipOutputStream zipOutputStream, Volume volume) throws IOException {
         String filePath = generateNavPath();
-        String fileContent = generateNavText();
+        String fileContent = generateNavText(volume);
         writeFileToZip(zipOutputStream, filePath, fileContent);
     }
 

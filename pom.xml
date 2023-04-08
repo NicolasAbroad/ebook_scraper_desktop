@@ -56,11 +56,11 @@
 			<version>11.0.1</version>
 		</dependency>
 
-		<!-- commons-text -->
+		<!-- Epubcheck -->
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-text</artifactId>
-			<version>1.10.0</version>
+			<groupId>org.w3c</groupId>
+			<artifactId>epubcheck</artifactId>
+			<version>4.2.6</version>
 		</dependency>
 
 	</dependencies>
