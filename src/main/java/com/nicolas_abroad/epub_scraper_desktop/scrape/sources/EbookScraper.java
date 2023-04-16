@@ -88,7 +88,6 @@ public abstract class EbookScraper {
         title = title.replaceAll("&", "&amp;");
         title = title.replaceAll("<", "&lt;");
         title = title.replaceAll(">", "&gt;");
-        // title = StringEscapeUtils.escapeHtml4(title);
         return title;
     }
 

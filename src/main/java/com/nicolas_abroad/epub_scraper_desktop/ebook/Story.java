@@ -25,7 +25,7 @@ public class Story {
 
     private List<Volume> volumes = new ArrayList<Volume>();
 
-    private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*]";
+    private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*&]";
 
     /**
      * Create a new story with a scraper and a url.
@@ -79,10 +79,10 @@ public class Story {
 
             // Get title & clean out unwanted characters
             String title = scraper.parseStoryTitle(document);
-            String cleanTitle = title.replaceAll(TITLE_CLEAN_REGEX, "");
+            title = title.replaceAll(TITLE_CLEAN_REGEX, "");
 
             // Set volume title
-            volume.setTitle(cleanTitle);
+            volume.setTitle(title);
         } else {
             // if volumes exist on index page
             if (this.volumes.size() != volumeTitles.size()) {

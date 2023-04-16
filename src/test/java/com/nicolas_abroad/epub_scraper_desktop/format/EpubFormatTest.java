@@ -27,7 +27,6 @@ import org.junit.rules.TemporaryFolder;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 
 /**
@@ -40,7 +39,10 @@ public class EpubFormatTest {
     private static String volumeTitle = "test";
     private static Path epubPath = Paths.get(System.getProperty("user.dir") + "\\" + volumeTitle + ".epub");
 
+    /** Volume used for happy path testing */
     private static Volume volume;
+    /** Volume used for unhappy path testing. Title contains "&". */
+    private static Volume edgeCaseVolume;
     private static String chapterContent;
 
     /** Temporary folder used to ensure no files are left after tests */
@@ -53,7 +55,6 @@ public class EpubFormatTest {
      */
     @BeforeClass
     public static void setUp() throws IOException {
-        EbookScraper scraper = new SyosetsuScraper();
         List<String> chapterUrls = new ArrayList<String>();
         chapterUrls.add("https://ncode.syosetu.com/n5464di/1/");
         chapterUrls.add("https://ncode.syosetu.com/n5464di/2/");
@@ -62,10 +63,33 @@ public class EpubFormatTest {
         chapterUrls.add("https://ncode.syosetu.com/n5464di/5/");
         chapterUrls.add("https://ncode.syosetu.com/n5464di/6/");
         chapterUrls.add("https://ncode.syosetu.com/n5464di/7/");
-        volume = new Volume(scraper, chapterUrls);
+        volume = new Volume(new SyosetsuScraper(), chapterUrls);
         volume.setTitle(volumeTitle);
         volume.setAuthor("nicolas");
         volume.generate();
+
+        chapterUrls = new ArrayList<String>();
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/151/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/152/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/153/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/154/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/155/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/156/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/157/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/158/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/159/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/160/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/161/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/162/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/163/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/164/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/165/");
+        chapterUrls.add("https://ncode.syosetu.com/n6681fa/166/");
+        edgeCaseVolume = new Volume(new SyosetsuScraper(), chapterUrls);
+        edgeCaseVolume.setTitle("第12話：Hooked  Feeling");
+        edgeCaseVolume.setVolumeNumber("13");
+        edgeCaseVolume.setAuthor("大虎龍真");
+        edgeCaseVolume.generate();
     }
 
     /**
@@ -565,6 +589,22 @@ public class EpubFormatTest {
     public void testGenerateEpub02() throws IOException {
         epubFormat.generate(volume);
 
+        File epubFile = epubPath.toFile();
+        EpubCheck epubcheck = new EpubCheck(epubFile);
+        assertTrue(epubcheck.validate());
+
+        epubFile.delete();
+    }
+
+    /**
+     * Test if edge case epub file conforms to official epub specifications
+     * @throws IOException
+     */
+    @Test
+    public void testGenerateEpub03() throws IOException {
+        epubFormat.generate(edgeCaseVolume);
+
+        Path epubPath = Paths.get(System.getProperty("user.dir") + "\\" + edgeCaseVolume.getTitle() + ".epub");
         File epubFile = epubPath.toFile();
         EpubCheck epubcheck = new EpubCheck(epubFile);
         assertTrue(epubcheck.validate());
