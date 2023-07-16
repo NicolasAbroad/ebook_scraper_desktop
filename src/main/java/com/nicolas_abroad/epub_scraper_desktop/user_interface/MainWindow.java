@@ -1,19 +1,7 @@
-package com.nicolas_abroad.epub_scraper_desktop.gui;
+package com.nicolas_abroad.epub_scraper_desktop.user_interface;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Story;
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
-import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
-import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
 import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.ScrapeExecutor;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -187,7 +175,7 @@ public class MainWindow extends Application {
         updateMessage(grid, MSG.SCRAPING);
 
         Thread thread = new Thread(() -> {
-            boolean executedCorrectly = executeScraping(textField);
+            boolean executedCorrectly = ScrapeExecutor.executeScraping(textField.getText());
             if (!executedCorrectly) {
                 modifyTextMessage(grid, MSG.ERROR);
                 return;
@@ -236,47 +224,6 @@ public class MainWindow extends Application {
             }
         }
         return null;
-    }
-
-    /**
-     * Execute scraping related functions.
-     * @param textField
-     * @return whether scrapping completed successfully
-     */
-    private static boolean executeScraping(TextField textField) {
-        try {
-            String url = textField.getText();
-            System.out.println(url);
-
-            // Scrape all data from url
-            InputParser inputParser = InputParser.getInputParser();
-            EbookScraper scraper = inputParser.getEbookScraper();
-            Story story = new Story(scraper, url);
-            story.generate();
-
-            // Generate volumes from scrapped data
-            EbookFormat ebookFormat = new EpubFormat();
-            for (Volume volume : story.getVolumes()) {
-                System.out.println(volume.getTitle());
-                ebookFormat.generate(volume);
-            }
-
-            return true;
-        } catch (Exception e) {
-            try {
-                String pathString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss")) + ".txt";
-                Path path = Paths.get(pathString);
-
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                String exceptionString = sw.toString();
-
-                Files.write(path, exceptionString.getBytes());
-            } catch (Exception e1) {
-            }
-
-            return false;
-        }
     }
 
 }
