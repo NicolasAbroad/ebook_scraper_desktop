@@ -25,29 +25,33 @@ public abstract class EbookScraper {
      * Parse author.
      * @param document
      * @return author
+     * @throws Exception
      */
-    public abstract String parseAuthor(Document document);
+    public abstract String parseAuthor(Document document) throws Exception;
 
     /**
      * Parse story title.
      * @param document
      * @return title
+     * @throws Exception
      */
-    public abstract String parseStoryTitle(Document document);
+    public abstract String parseStoryTitle(Document document) throws Exception;
 
     /**
      * Checks if story has volumes.
      * @param document
      * @return true if has volumes
+     * @throws Exception
      */
-    public abstract boolean hasVolumes(Document document);
+    public abstract boolean hasVolumes(Document document) throws Exception;
 
     /**
      * Parse volume titles.
      * @param document
      * @return list of volume titles
+     * @throws Exception
      */
-    public abstract List<String> parseVolumeTitles(Document document);
+    public abstract List<String> parseVolumeTitles(Document document) throws Exception;
 
     /**
      * Parse chapter title.
@@ -67,15 +71,17 @@ public abstract class EbookScraper {
      * Parse chapter urls. Used if story has no volumes.
      * @param document
      * @return chapter urls
+     * @throws Exception
      */
-    public abstract List<String> parseAllChapterUrls(Document document);
+    public abstract List<String> parseAllChapterUrls(Document document) throws Exception;
 
     /**
      * Parse chapters by volume. Used if story has volumes.
      * @param document
      * @return chapters sorted by volume
+     * @throws Exception
      */
-    public abstract Map<Integer, List<String>> parseChapterUrlsByVolume(Document document);
+    public abstract Map<Integer, List<String>> parseChapterUrlsByVolume(Document document) throws Exception;
 
     /**
      * Parse chapter number.

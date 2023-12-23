@@ -26,6 +26,8 @@ public class KakuyomuScraperTest {
 
     private static Document volumeDocument;
 
+    private static Document volumeWithSubtitlesDocument;
+
     private static Document chapter;
 
     /**
@@ -36,13 +38,14 @@ public class KakuyomuScraperTest {
     public static void setUp() throws IOException {
         noVolumeDocument = scraper.parseHTMLDocument("https://kakuyomu.jp/works/1177354054882078516");
         volumeDocument = scraper.parseHTMLDocument("https://kakuyomu.jp/works/1177354054891792326");
+        volumeWithSubtitlesDocument = scraper.parseHTMLDocument("https://kakuyomu.jp/works/1177354054884850859");
         chapter = scraper
                 .parseHTMLDocument("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054891799922");
     }
 
     /** Test parse author method on page without author link. */
     @Test
-    public void testParseAuthor01() {
+    public void testParseAuthor01() throws Exception {
         String expected = "尾岡れき";
         String actual = scraper.parseAuthor(noVolumeDocument);
         assertEquals(expected, actual);
@@ -50,7 +53,7 @@ public class KakuyomuScraperTest {
 
     /** Test parse author method on page with author link. */
     @Test
-    public void testParseAuthor02() {
+    public void testParseAuthor02() throws Exception {
         String expected = "此見えこ";
         String actual = scraper.parseAuthor(volumeDocument);
         assertEquals(expected, actual);
@@ -58,7 +61,7 @@ public class KakuyomuScraperTest {
 
     /** Test parse story title method. */
     @Test
-    public void testParseStoryTitle() {
+    public void testParseStoryTitle() throws Exception {
         String expected = "スイーツをあなたに";
         String actual = scraper.parseStoryTitle(noVolumeDocument);
         assertEquals(expected, actual);
@@ -66,30 +69,46 @@ public class KakuyomuScraperTest {
 
     /** Test if html has volumes. */
     @Test
-    public void testHasVolumes01() {
+    public void testHasVolumes01() throws Exception {
         assertFalse(scraper.hasVolumes(noVolumeDocument));
     }
 
-    /** Test if html has volumes. */
+    /** Test if html has volumes. (Without subtitles) */
     @Test
-    public void testHasVolumes02() {
+    public void testHasVolumes02() throws Exception {
         assertTrue(scraper.hasVolumes(volumeDocument));
     }
 
-    /** Test volume title parsing. */
+    /** Test if html has volumes. (With subtitles) */
     @Test
-    public void testParseVolumeTitles01() {
-        List<String> expected = new ArrayList<String>();
-        assertEquals(expected, scraper.parseVolumeTitles(noVolumeDocument));
+    public void testHasVolumes03() throws Exception {
+        assertTrue(scraper.hasVolumes(volumeWithSubtitlesDocument));
     }
 
     /** Test volume title parsing. */
     @Test
-    public void testParseVolumeTitle02() {
+    public void testParseVolumeTitles01() throws Exception {
+        List<String> expected = new ArrayList<String>();
+        List<String> actual = scraper.parseVolumeTitles(noVolumeDocument);
+        assertEquals(expected, actual);
+    }
+
+    /** Test volume title parsing. (Without subtitles) */
+    @Test
+    public void testParseVolumeTitle02() throws Exception {
         List<String> expected = new ArrayList<String>();
         expected.add("本編");
         expected.add("後日談");
         assertEquals(expected, scraper.parseVolumeTitles(volumeDocument));
+    }
+
+    /** Test volume title parsing. (With subtitles) */
+    @Test
+    public void testParseVolumeTitle03() throws Exception {
+        List<String> expected = new ArrayList<String>();
+        expected.add("本編");
+        expected.add("付録");
+        assertEquals(expected, scraper.parseVolumeTitles(volumeWithSubtitlesDocument));
     }
 
     /** Test chapter title parsing. */
@@ -161,7 +180,7 @@ public class KakuyomuScraperTest {
 
     /** Test parsing all chapters' urls. */
     @Test
-    public void testParseAllChapterUrls() {
+    public void testParseAllChapterUrls() throws Exception {
         List<String> expected = new ArrayList<String>();
         expected.add("https://kakuyomu.jp/works/1177354054882078516/episodes/1177354054882078526");
         expected.add("https://kakuyomu.jp/works/1177354054882078516/episodes/1177354054882078613");
@@ -171,9 +190,9 @@ public class KakuyomuScraperTest {
         assertEquals(expected, actual);
     }
 
-    /** Test parsing chapters' urls by volume. */
+    /** Test parsing chapters' urls by volume. (Without subtitles) */
     @Test
-    public void testParseChaptersByVolume() {
+    public void testParseChaptersByVolume01() throws Exception {
         // prepare expected map
         Map<Integer, List<String>> expected = new HashMap<Integer, List<String>>();
         List<String> volume1 = new ArrayList<String>();
@@ -208,6 +227,7 @@ public class KakuyomuScraperTest {
         volume1.add("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054891917824");
         volume1.add("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054891917852");
         volume1.add("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054891917861");
+
         List<String> volume2 = new ArrayList<String>();
         volume2.add("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054892091168");
         volume2.add("https://kakuyomu.jp/works/1177354054891792326/episodes/1177354054892091420");
@@ -218,6 +238,54 @@ public class KakuyomuScraperTest {
         expected.put(2, volume2);
 
         Map<Integer, List<String>> actual = scraper.parseChapterUrlsByVolume(volumeDocument);
+        assertEquals(expected, actual);
+    }
+
+    /** Test parsing chapters' urls by volume. (With subtitles) */
+    @Test
+    public void testParseChaptersByVolume02() throws Exception {
+        // prepare expected map
+        Map<Integer, List<String>> expected = new HashMap<Integer, List<String>>();
+        List<String> volume1 = new ArrayList<String>();
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884851015");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884853763");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884862727");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884878794");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884886288");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884903372");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884903945");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884920743");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884938794");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884947825");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884949855");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884954647");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884973119");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884980784");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884987687");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054884999842");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885006577");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885017919");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885032088");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885048963");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885078077");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885132567");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885153605");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885253650");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885278688");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885291381");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885358346");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885382126");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885406061");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885420799");
+        volume1.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885431348");
+
+        List<String> volume2 = new ArrayList<String>();
+        volume2.add("https://kakuyomu.jp/works/1177354054884850859/episodes/1177354054885438179");
+
+        expected.put(1, volume1);
+        expected.put(2, volume2);
+
+        Map<Integer, List<String>> actual = scraper.parseChapterUrlsByVolume(volumeWithSubtitlesDocument);
         assertEquals(expected, actual);
     }
 

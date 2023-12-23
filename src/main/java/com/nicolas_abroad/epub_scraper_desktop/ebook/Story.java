@@ -1,6 +1,5 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +39,9 @@ public class Story {
     /**
      * Parse chapter urls by volume title.
      * @param document HTML document
+     * @throws Exception
      */
-    private void parseVolumeUrls(Document document) {
+    private void parseVolumeUrls(Document document) throws Exception {
         if (scraper.hasVolumes(document)) {
             this.volumeUrls = scraper.parseChapterUrlsByVolume(document);
         } else {
@@ -69,8 +69,9 @@ public class Story {
     /**
      * Assign each volume its title.
      * @param document HTML document
+     * @throws Exception
      */
-    private void assignVolumeTitles(Document document) {
+    private void assignVolumeTitles(Document document) throws Exception {
         List<String> volumeTitles = scraper.parseVolumeTitles(document);
 
         if (volumeTitles == null || volumeTitles.isEmpty()) {
@@ -108,8 +109,9 @@ public class Story {
     /**
      * Assign author to volume.
      * @param document HTML document
+     * @throws Exception
      */
-    private void assignVolumeAuthor(Document document) {
+    private void assignVolumeAuthor(Document document) throws Exception {
         String author = scraper.parseAuthor(document);
         for (int i = 0; i < volumes.size(); i++) {
             volumes.get(i).setAuthor(author);
@@ -138,9 +140,9 @@ public class Story {
 
     /**
      * Generate all volumes.
-     * @throws IOException
+     * @throws Exception
      */
-    public void generate() throws IOException {
+    public void generate() throws Exception {
         Document document = scraper.parseHTMLDocument(url);
         parseVolumeUrls(document);
         populateVolumes();

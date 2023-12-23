@@ -15,7 +15,10 @@ import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
 import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
-/** Scraping execution. */
+/**
+ * Scraping execution.
+ * @author Nicolas
+ */
 public class ScrapeExecutor {
 
     /**
