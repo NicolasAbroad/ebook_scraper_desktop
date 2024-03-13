@@ -63,15 +63,21 @@ public class SysosetsuScraperTest {
         assertEquals(expected, actual);
     }
 
-    /** Test if html has volumes. */
+    /**
+     * Test if html has volumes.
+     * @throws Exception
+     */
     @Test
-    public void testHasVolumes01() {
+    public void testHasVolumes01() throws Exception {
         assertFalse(scraper.hasVolumes(noVolumeDocument));
     }
 
-    /** Test if html has volumes. */
+    /**
+     * Test if html has volumes.
+     * @throws Exception
+     */
     @Test
-    public void testHasVolumes02() {
+    public void testHasVolumes02() throws Exception {
         assertTrue(scraper.hasVolumes(volumeDocument));
     }
 
@@ -150,7 +156,7 @@ public class SysosetsuScraperTest {
     @Test
     public void testParseChapterText01() {
         String expected = "<div class=\"novel_bn\">\n"
-                + "<a>次へ&#xa0;&gt;&gt;</a></div><div id=\"novel_no\">1/526</div><p class=\"novel_subtitle\">『プロローグ』</p><div id=\"novel_p\" class=\"novel_view\">\n"
+                + "<a class=\"novelview_pager-next\">次へ&#xa0;</a></div><div id=\"novel_no\">1/537</div><p class=\"novel_subtitle\">『プロローグ』</p><div id=\"novel_p\" class=\"novel_view\">\n"
                 + "<p id=\"Lp1\">初投稿、というか初小説です。</p>\n" + "<p id=\"Lp2\">よろしくお願いします。</p>\n"
                 + "</div><div id=\"novel_honbun\" class=\"novel_view\">\n" + "<p id=\"L1\">　人はあっけなく死ぬものだ。</p>\n"
                 + "<p id=\"L2\"><br></br></p>\n" + "<p id=\"L3\">　そんなことはわかっていた。</p>\n" + "<p id=\"L4\"><br></br></p>\n"
@@ -168,7 +174,7 @@ public class SysosetsuScraperTest {
                 + "<p id=\"L29\">　10年、引きこもりのニートだった俺に、温かく接してくれた父と母。</p>\n" + "<p id=\"L30\"><br></br></p>\n"
                 + "<p id=\"L31\">　このまま引きこもりを続けたら、ふたりの死が無駄になった気がするから。</p>\n" + "<p id=\"L32\"><br></br></p>\n"
                 + "<p id=\"L33\">　外に出よう。</p>\n" + "</div><div class=\"novel_bn\">\n"
-                + "<a>次へ&#xa0;&gt;&gt;</a><a>目次</a></div>";
+                + "<a class=\"novelview_pager-next\">次へ&#xa0;</a><a>目次</a></div>";
         String actual = scraper.parseChapterText(chapter);
         assertEquals(expected, actual);
     }
@@ -181,7 +187,7 @@ public class SysosetsuScraperTest {
     public void testParseChapterText02() throws IOException {
         Document document = scraper.parseHTMLDocument("https://ncode.syosetu.com/n5464di/5/");
         String expected = "<div class=\"novel_bn\">\n"
-                + "<a>&lt;&lt;&#xa0;前へ</a><a>次へ&#xa0;&gt;&gt;</a></div><div id=\"novel_no\">5/7</div><p class=\"novel_subtitle\">共通⑤ 彼女は幼馴染み？</p><div id=\"novel_honbun\" class=\"novel_view\">\n"
+                + "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a></div><div id=\"novel_no\">5/7</div><p class=\"novel_subtitle\">共通⑤ 彼女は幼馴染み？</p><div id=\"novel_honbun\" class=\"novel_view\">\n"
                 + "<p id=\"L1\">「マグナダリアさん!!」</p>\n" + "<p id=\"L2\">ウラミルヂィが小部屋のドアを蹴破る。</p>\n"
                 + "<p id=\"L3\"><br></br></p>\n" + "<p id=\"L4\">室内には筋トレ器具のようなものが無数にある。</p>\n"
                 + "<p id=\"L5\">その中に一人の赤髪の女がいた。</p>\n" + "<p id=\"L6\"><br></br></p>\n"
@@ -207,7 +213,8 @@ public class SysosetsuScraperTest {
                 + "<p id=\"L47\"><br></br></p>\n" + "<p id=\"L48\">ウラミルヂィが新斗の前に出て、足で剣の中心を蹴り、無数のナイフを投げる。</p>\n"
                 + "<p id=\"L49\">マグナダリアの腕にはあたらずに、無数のナイフは剣を打撃した。</p>\n" + "<p id=\"L50\">マグナダリアの手から剣が落ちる。</p>\n"
                 + "<p id=\"L51\"><br></br></p>\n" + "<p id=\"L52\">マグナダリアはようやく話を聞く体制になった。</p>\n"
-                + "</div><div class=\"novel_bn\">\n" + "<a>&lt;&lt;&#xa0;前へ</a><a>次へ&#xa0;&gt;&gt;</a><a>目次</a></div>";
+                + "</div><div class=\"novel_bn\">\n"
+                + "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a><a>目次</a></div>";
         String actual = scraper.parseChapterText(document);
         System.out.println(actual);
         assertEquals(expected, actual);

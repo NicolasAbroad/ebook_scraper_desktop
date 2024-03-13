@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class KakuyomuScraper extends EbookScraper {
 
-    // Volume parsing
     private static final String BASE_URL = "https://kakuyomu.jp";
 
     // Chapter parsing

@@ -1,11 +1,15 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape.sources;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.net.URLEncodedUtils;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
@@ -20,13 +24,23 @@ import org.jsoup.select.Elements;
  * Ebook scraper for syosetsu.com
  * @author Nicolas
  */
+@SuppressWarnings("deprecation")
 public class SyosetsuScraper extends EbookScraper {
 
-    // Volume parsing
     private static final String BASE_URL = "https://ncode.syosetu.com";
+
+    // Pagination parsing
+    private static final String PAGINATION_BAR = "div.novelview_pager-box";
+    private static final String PAGINATION_LAST_PAGE = "a.novelview_pager-last";
+
+    // Author parsing
     private static final String AUTHOR_SELECTOR_WITH_LINK = "div#novel_contents > div#novel_color > div.novel_writername > a";
     private static final String AUTHOR_SELECTOR_WITHOUT_LINK = "div#novel_contents > div#novel_color > div.novel_writername";
+
+    // Title parsing
     private static final String STORY_TITLE_SELECTOR = "div#novel_contents > div#novel_color > p.novel_title";
+
+    // Volume parsing
     private static final String CHAPTER_URLS_SELECTOR = "div#novel_contents > div#novel_color > div.index_box > dl.novel_sublist2 > dd.subtitle > a";
     private static final String CHAPTER_URLS_CONTAINER = "div#novel_contents > div#novel_color > div.index_box";
     private static final String VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "div.chapter_title";
@@ -55,15 +69,17 @@ public class SyosetsuScraper extends EbookScraper {
         Response response = connection.execute();
         Document document = response.parse().normalise();
 
-        boolean is18Plus = is18Plus(document);
-        if (is18Plus) {
-            // Get session id when target url is from the 18+ section
-            this.sessionId = response.cookie("ses");
-            // Get html source again (with correct cookie data)
-            connection = Jsoup.connect(url).method(Method.GET);
-            set18PlusCookies(connection);
-            response = connection.execute();
-            document = response.parse().normalise();
+        if (this.sessionId == null || this.sessionId.isEmpty()) {
+            boolean is18Plus = is18Plus(document);
+            if (is18Plus) {
+                // Get session id when target url is from the 18+ section
+                this.sessionId = response.cookie("ses");
+                // Get html source again (with correct cookie data)
+                connection = Jsoup.connect(url).method(Method.GET);
+                set18PlusCookies(connection);
+                response = connection.execute();
+                document = response.parse().normalise();
+            }
         }
 
         OutputSettings settings = new OutputSettings();
@@ -108,7 +124,12 @@ public class SyosetsuScraper extends EbookScraper {
         return document.selectFirst(STORY_TITLE_SELECTOR).text();
     }
 
-    public boolean hasVolumes(Document document) {
+    public boolean hasVolumes(Document document) throws Exception {
+        Integer lastPageNumber = getLastPageNumber(document);
+        if (lastPageNumber != null) {
+            scrapeAllIndexes(document, lastPageNumber);
+        }
+
         try {
             document.selectFirst(VOLUME_TITLES_SELECTOR).hasText();
         } catch (NullPointerException e) {
@@ -153,6 +174,37 @@ public class SyosetsuScraper extends EbookScraper {
 
     private String parseChapterUrl(Element element) {
         return BASE_URL + element.attr("href");
+    }
+
+    private Integer getLastPageNumber(Document document) {
+        Element paginationBar = document.selectFirst(PAGINATION_BAR);
+        if (paginationBar == null) {
+            return null;
+        }
+        String lastPageURL = paginationBar.selectFirst(PAGINATION_LAST_PAGE).attr("href");
+        int paramsIndex = lastPageURL.indexOf("?") + 1;
+
+        List<NameValuePair> params = URLEncodedUtils.parse(lastPageURL.substring(paramsIndex),
+                Charset.forName("UTF-8"));
+
+        String lastPageNumber = params.stream().filter(p -> "p".equals(p.getName())).findFirst().get().getValue();
+        return Integer.parseInt(lastPageNumber);
+    }
+
+    private void scrapeAllIndexes(Document document, Integer lastPageNumber) throws Exception {
+        for (Integer i = 2; i <= lastPageNumber; i++) {
+            // Build url with page number as parameter
+            URIBuilder uriBuilder = new URIBuilder(document.location());
+            uriBuilder.addParameter("p", i.toString());
+
+            // Scrape index entries
+            Document page = parseHTMLDocument(uriBuilder.build().toString());
+            Elements indexEntries = page.selectFirst(CHAPTER_URLS_CONTAINER).children();
+
+            // Append index entries to original document
+            Element indexElement = document.selectFirst(CHAPTER_URLS_CONTAINER);
+            indexElement.insertChildren(-1, indexEntries);
+        }
     }
 
     // --------------------------------------

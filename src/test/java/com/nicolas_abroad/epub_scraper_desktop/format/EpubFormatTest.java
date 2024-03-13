@@ -102,7 +102,7 @@ public class EpubFormatTest {
                 + "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" + "<head>\r\n" + "<meta charset=\"utf-8\" />\r\n"
                 + "<link rel=\"stylesheet\" type=\"text/css\" href=\"horizontal.css\" class=\"horizontal\" title=\"horizontal\" />\r\n"
                 + "<title>共通⑤ 彼女は幼馴染み？</title>\r\n" + "</head>\r\n" + "<body>\r\n" + "<div class=\"novel_bn\">\n"
-                + "<a>&lt;&lt;&#xa0;前へ</a><a>次へ&#xa0;&gt;&gt;</a></div><div id=\"novel_no\">5/7</div><p class=\"novel_subtitle\">共通⑤ 彼女は幼馴染み？</p><div id=\"novel_honbun\" class=\"novel_view\">\n"
+                + "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a></div><div id=\"novel_no\">5/7</div><p class=\"novel_subtitle\">共通⑤ 彼女は幼馴染み？</p><div id=\"novel_honbun\" class=\"novel_view\">\n"
                 + "<p id=\"L1\">「マグナダリアさん!!」</p>\n" + "<p id=\"L2\">ウラミルヂィが小部屋のドアを蹴破る。</p>\n"
                 + "<p id=\"L3\"><br></br></p>\n" + "<p id=\"L4\">室内には筋トレ器具のようなものが無数にある。</p>\n"
                 + "<p id=\"L5\">その中に一人の赤髪の女がいた。</p>\n" + "<p id=\"L6\"><br></br></p>\n"
@@ -129,7 +129,8 @@ public class EpubFormatTest {
                 + "<p id=\"L49\">マグナダリアの腕にはあたらずに、無数のナイフは剣を打撃した。</p>\n" + "<p id=\"L50\">マグナダリアの手から剣が落ちる。</p>\n"
                 + "<p id=\"L51\"><br></br></p>\n" + "<p id=\"L52\">マグナダリアはようやく話を聞く体制になった。</p>\n"
                 + "</div><div class=\"novel_bn\">\n"
-                + "<a>&lt;&lt;&#xa0;前へ</a><a>次へ&#xa0;&gt;&gt;</a><a>目次</a></div>\r\n" + "</body>\r\n" + "</html>";
+                + "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a><a>目次</a></div>\r\n"
+                + "</body>\r\n" + "</html>";
     }
 
     /**
