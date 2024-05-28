@@ -5,5 +5,6 @@ This software scrapes light novels and converts them into epub files.
 - [小説家になろう](https://syosetu.com/)
 - [カクヨム](https://kakuyomu.jp/)
 
-## Interfaces available
-- GUI (javafx)
+## How to run
+1. Build the program by using the maven command `mvn clean install`. A jar file containing all dependencies will be generated in the target folder.
+2. Run the program by using `java -jar [file name]`.
