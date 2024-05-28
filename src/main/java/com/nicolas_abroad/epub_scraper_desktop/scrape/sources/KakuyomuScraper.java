@@ -118,7 +118,7 @@ public class KakuyomuScraper extends EbookScraper {
     public Map<Integer, List<String>> parseChapterUrlsByVolume(Document document) throws Exception {
         Map<Integer, List<String>> volumes = new HashMap<Integer, List<String>>();
         List<String> urls = null;
-        List<String> subtitleUrls = null;
+        List<String> subtitleUrls = new ArrayList<>();
 
         JsonNode rootNode = parseJsonNode(document);
         String workId = parseWordId(rootNode);
@@ -143,7 +143,11 @@ public class KakuyomuScraper extends EbookScraper {
             }
 
             if (!isVolumeTitleNode && hasVolumeUrls) {
-                subtitleUrls.addAll(urls);
+                if (i == 0) {
+					volumes.put(1, urls);
+                } else {
+                    subtitleUrls.addAll(urls);
+                }
             }
 
         }

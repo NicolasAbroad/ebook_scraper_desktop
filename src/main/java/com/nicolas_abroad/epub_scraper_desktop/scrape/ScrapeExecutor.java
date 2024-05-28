@@ -28,8 +28,6 @@ public class ScrapeExecutor {
      */
     public static boolean executeScraping(String url) {
         try {
-            System.out.println(url);
-
             // Scrape all data from url
             InputParser inputParser = InputParser.getInputParser();
             EbookScraper scraper = inputParser.getEbookScraper();

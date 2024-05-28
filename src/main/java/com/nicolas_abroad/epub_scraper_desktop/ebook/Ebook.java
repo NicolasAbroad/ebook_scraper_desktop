@@ -12,9 +12,9 @@ public interface Ebook {
 
     /**
      * Set ebook's format.
-     * @param EbookFormat
+     * @param ebookFormat
      */
-    void setEbookFormat(EbookFormat EbookFormat);
+    void setEbookFormat(EbookFormat ebookFormat);
 
     /**
      * Generate all ebooks.

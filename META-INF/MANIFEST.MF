@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.nicolas_abroad.epub_scraper_desktop.user_interface.CommandLineInterface
+

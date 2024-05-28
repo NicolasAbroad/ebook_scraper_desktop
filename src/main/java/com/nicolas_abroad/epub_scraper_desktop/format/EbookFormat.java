@@ -14,9 +14,8 @@ public interface EbookFormat {
     /**
      * Generate ebook.
      * @param volume
-     * @throws FileNotFoundException
      * @throws IOException
      */
-    void generate(Volume volume) throws FileNotFoundException, IOException;
+    void generate(Volume volume) throws IOException;
 
 }
