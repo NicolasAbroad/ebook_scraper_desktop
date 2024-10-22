@@ -6,21 +6,24 @@ import java.util.List;
 
 /**
  * Interface for Ebooks
+ *
  * @author Nicolas
  */
 public interface Ebook {
 
-    /**
-     * Set ebook's format.
-     * @param ebookFormat
-     */
-    void setEbookFormat(EbookFormat ebookFormat);
+	/**
+	 * Set ebook's format.
+	 *
+	 * @param ebookFormat
+	 */
+	void setEbookFormat(EbookFormat ebookFormat);
 
-    /**
-     * Generate all ebooks.
-     * @param url
-     * @return list containing all ebooks
-     */
-    List<Volume> generateEbooks(String url);
+	/**
+	 * Generate all ebooks.
+	 *
+	 * @param url
+	 * @return list containing all ebooks
+	 */
+	List<Volume> generateEbooks(String url);
 
 }

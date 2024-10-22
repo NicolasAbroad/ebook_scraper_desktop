@@ -8,98 +8,108 @@ import java.util.List;
 
 /**
  * Class for a single volume.
+ *
  * @author Nicolas
  */
 public class Volume {
 
-    private EbookScraper scraper;
+	private EbookScraper scraper;
 
-    private List<String> chapterUrls;
+	private List<String> chapterUrls;
 
-    private List<Chapter> chapters = new ArrayList<Chapter>();
+	private List<Chapter> chapters = new ArrayList<Chapter>();
 
-    private String author;
+	private String author;
 
-    private String title;
+	private String title;
 
-    private String volumeNumberFormatted;
+	private String volumeNumberFormatted;
 
-    /**
-     * Create a new volume with a scraper and a list of chapter urls.
-     * @param scraper
-     * @param chapterUrls
-     */
-    public Volume(EbookScraper scraper, List<String> chapterUrls) {
-        this.scraper = scraper;
-        this.chapterUrls = chapterUrls;
-    }
+	/**
+	 * Create a new volume with a scraper and a list of chapter urls.
+	 *
+	 * @param scraper
+	 * @param chapterUrls
+	 */
+	public Volume(EbookScraper scraper, List<String> chapterUrls) {
+		this.scraper = scraper;
+		this.chapterUrls = chapterUrls;
+	}
 
-    /**
-     * Get author.
-     * @return author
-     */
-    public String getAuthor() {
-        return this.author;
-    }
+	/**
+	 * Get author.
+	 *
+	 * @return author
+	 */
+	public String getAuthor() {
+		return this.author;
+	}
 
-    /**
-     * Set author.
-     * @param author
-     */
-    public void setAuthor(String author) {
-        this.author = author;
-    };
+	/**
+	 * Set author.
+	 *
+	 * @param author
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    /**
-     * Get title.
-     * @return title
-     */
-    public String getTitle() {
-        return this.title;
-    }
+	/**
+	 * Get title.
+	 *
+	 * @return title
+	 */
+	public String getTitle() {
+		return this.title;
+	}
 
-    /**
-     * Set title.
-     * @param title
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    };
+	/**
+	 * Set title.
+	 *
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    /**
-     * Get list of all chapters.
-     * @return list of all chapters
-     */
-    public List<Chapter> getChapters() {
-        return chapters;
-    };
+	/**
+	 * Get list of all chapters.
+	 *
+	 * @return list of all chapters
+	 */
+	public List<Chapter> getChapters() {
+		return chapters;
+	}
 
-    /**
-     * Get formatted volume number with leading zeros.
-     * @return volume number
-     */
-    public String getVolumeNumber() {
-        return volumeNumberFormatted;
-    }
+	/**
+	 * Get formatted volume number with leading zeros.
+	 *
+	 * @return volume number
+	 */
+	public String getVolumeNumber() {
+		return volumeNumberFormatted;
+	}
 
-    /**
-     * Set formatted volume number with leading zeros.
-     * @param volumeNumber
-     */
-    public void setVolumeNumber(String volumeNumber) {
-        this.volumeNumberFormatted = volumeNumber;
-    }
+	/**
+	 * Set formatted volume number with leading zeros.
+	 *
+	 * @param volumeNumber
+	 */
+	public void setVolumeNumber(String volumeNumber) {
+		this.volumeNumberFormatted = volumeNumber;
+	}
 
-    /**
-     * Scrape all chapters in the chapter urls list.
-     * @throws IOException
-     */
-    public void generate() throws IOException {
-        for (String url : chapterUrls) {
-            Chapter chapter = new Chapter(scraper, url);
-            chapter.generate();
-            this.chapters.add(chapter);
-        }
-    }
+	/**
+	 * Scrape all chapters in the chapter urls list.
+	 *
+	 * @throws IOException
+	 */
+	public void generate() throws IOException {
+		for (String url : chapterUrls) {
+			Chapter chapter = new Chapter(scraper, url);
+			chapter.generate();
+			this.chapters.add(chapter);
+		}
+	}
 
 }

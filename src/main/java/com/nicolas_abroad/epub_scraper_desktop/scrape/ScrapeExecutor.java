@@ -17,46 +17,48 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Scraping execution.
+ *
  * @author Nicolas
  */
 public class ScrapeExecutor {
 
-    /**
-     * Execute scraping.
-     * @param url
-     * @return whether scrapping completed successfully
-     */
-    public static boolean executeScraping(String url) {
-        try {
-            // Scrape all data from url
-            InputParser inputParser = InputParser.getInputParser();
-            EbookScraper scraper = inputParser.getEbookScraper();
-            Story story = new Story(scraper, url);
-            story.generate();
+	/**
+	 * Execute scraping.
+	 *
+	 * @param url
+	 * @return whether scrapping completed successfully
+	 */
+	public static boolean executeScraping(String url) {
+		try {
+			// Scrape all data from url
+			InputParser inputParser = InputParser.getInputParser();
+			EbookScraper scraper = inputParser.getEbookScraper();
+			Story story = new Story(scraper, url);
+			story.generate();
 
-            // Generate volumes from scrapped data
-            EbookFormat ebookFormat = new EpubFormat();
-            for (Volume volume : story.getVolumes()) {
-                System.out.println(volume.getTitle());
-                ebookFormat.generate(volume);
-            }
+			// Generate volumes from scrapped data
+			EbookFormat ebookFormat = new EpubFormat();
+			for (Volume volume : story.getVolumes()) {
+				System.out.println(volume.getTitle());
+				ebookFormat.generate(volume);
+			}
 
-            return true;
-        } catch (Exception e) {
-            try {
-                String pathString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss")) + ".txt";
-                Path path = Paths.get(pathString);
+			return true;
+		} catch (Exception e) {
+			try {
+				String pathString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss")) + ".txt";
+				Path path = Paths.get(pathString);
 
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                String exceptionString = sw.toString();
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				String exceptionString = sw.toString();
 
-                Files.write(path, exceptionString.getBytes());
-            } catch (Exception e1) {
-            }
+				Files.write(path, exceptionString.getBytes());
+			} catch (Exception e1) {
+			}
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 
 }
