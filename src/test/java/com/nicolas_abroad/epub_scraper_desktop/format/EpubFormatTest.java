@@ -1,7 +1,13 @@
 package com.nicolas_abroad.epub_scraper_desktop.format;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.adobe.epubcheck.api.EpubCheck;
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,15 +25,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
-import com.adobe.epubcheck.api.EpubCheck;
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test class for the EpubFormat class.

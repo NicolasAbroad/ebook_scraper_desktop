@@ -1,14 +1,13 @@
 package com.nicolas_abroad.epub_scraper_desktop.input;
 
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 
 /**
  * Unit test class for the InputParser class.
