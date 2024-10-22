@@ -1,8 +1,8 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
-import java.util.List;
-
 import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
+
+import java.util.List;
 
 /**
  * Interface for Ebooks

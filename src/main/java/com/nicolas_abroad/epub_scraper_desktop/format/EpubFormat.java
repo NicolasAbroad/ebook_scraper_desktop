@@ -1,5 +1,8 @@
 package com.nicolas_abroad.epub_scraper_desktop.format;
 
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,9 +12,6 @@ import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
 
 /**
  * Epub format.

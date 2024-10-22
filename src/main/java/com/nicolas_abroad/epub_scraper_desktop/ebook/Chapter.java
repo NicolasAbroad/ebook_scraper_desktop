@@ -1,10 +1,9 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
-import java.io.IOException;
-
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import org.jsoup.nodes.Document;
 
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import java.io.IOException;
 
 /**
  * Class for a single chapter of a volume.

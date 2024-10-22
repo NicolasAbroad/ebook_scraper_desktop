@@ -1,5 +1,12 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape;
 
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Story;
+import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
+import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
+import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
+import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -7,13 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Story;
-import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
-import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
-import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
-import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
  * Scraping execution.

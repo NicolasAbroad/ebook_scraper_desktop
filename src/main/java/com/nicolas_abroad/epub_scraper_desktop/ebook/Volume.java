@@ -1,10 +1,10 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
  * Class for a single volume.

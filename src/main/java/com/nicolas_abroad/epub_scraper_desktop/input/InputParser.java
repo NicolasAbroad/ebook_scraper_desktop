@@ -1,11 +1,11 @@
 package com.nicolas_abroad.epub_scraper_desktop.input;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.KakuyomuScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User input parsing.

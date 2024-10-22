@@ -1,10 +1,10 @@
 package com.nicolas_abroad.epub_scraper_desktop.scrape.sources;
 
+import org.jsoup.nodes.Document;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import org.jsoup.nodes.Document;
 
 /**
  * Ebook scraper interface.

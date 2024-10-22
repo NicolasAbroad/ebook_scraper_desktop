@@ -1,14 +1,13 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
+import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import org.jsoup.nodes.Document;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.jsoup.nodes.Document;
-
-import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 
 /**
  * Class for entire story.

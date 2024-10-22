@@ -1,9 +1,8 @@
 package com.nicolas_abroad.epub_scraper_desktop.format;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
+
+import java.io.IOException;
 
 /**
  * Interface used to generate ebooks, changing based on the format.
