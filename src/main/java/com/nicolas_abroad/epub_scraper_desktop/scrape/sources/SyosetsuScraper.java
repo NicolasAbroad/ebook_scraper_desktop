@@ -35,24 +35,23 @@ public class SyosetsuScraper extends EbookScraper {
 	private static final String PAGINATION_LAST_PAGE = "a.novelview_pager-last";
 
 	// Author parsing
-	private static final String AUTHOR_SELECTOR_WITH_LINK = "div#novel_contents > div#novel_color > div.novel_writername > a";
-	private static final String AUTHOR_SELECTOR_WITHOUT_LINK = "div#novel_contents > div#novel_color > div.novel_writername";
+	private static final String AUTHOR_SELECTOR = ".p-novel > .p-novel__author";
 
 	// Title parsing
-	private static final String STORY_TITLE_SELECTOR = "div#novel_contents > div#novel_color > p.novel_title";
+	private static final String STORY_TITLE_SELECTOR = ".p-novel > .p-novel__title";
 
 	// Volume parsing
-	private static final String CHAPTER_URLS_SELECTOR = "div#novel_contents > div#novel_color > div.index_box > dl.novel_sublist2 > dd.subtitle > a";
-	private static final String CHAPTER_URLS_CONTAINER = "div#novel_contents > div#novel_color > div.index_box";
-	private static final String VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "div.chapter_title";
-	private static final String CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER = "dl.novel_sublist2";
-	private static final String CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "dd.subtitle > a";
-	private static final String VOLUME_TITLES_SELECTOR = "#novel_contents > div#novel_color > div.index_box > div.chapter_title";
+	private static final String CHAPTER_URLS_SELECTOR = ".p-novel > .p-eplist > .p-eplist__sublist > a";
+	private static final String CHAPTER_URLS_CONTAINER = ".p-novel > .p-eplist";
+	private static final String VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = ".p-eplist__chapter-title";
+	private static final String CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER = ".p-eplist__sublist";
+	private static final String CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER = "a.p-eplist__subtitle";
+	private static final String VOLUME_TITLES_SELECTOR = ".p-novel > .p-eplist > .p-eplist__chapter-title";
 
 	// Chapter parsing
-	private static final String CHAPTER_TITLE_SELECTOR = "#novel_contents > div#novel_color > p.novel_subtitle";
-	private static final String CHAPTER_TEXT_SELECTOR = "div#novel_contents > div#novel_color";
-	private static final String CHAPTER_NUMBER = "div#novel_contents > div#novel_color > div#novel_no";
+	private static final String CHAPTER_TITLE_SELECTOR = ".p-novel .p-novel__title";
+	private static final String CHAPTER_TEXT_SELECTOR = ".p-novel";
+	private static final String CHAPTER_NUMBER = ".p-novel .p-novel__number";
 
 	private String sessionId;
 
@@ -111,14 +110,11 @@ public class SyosetsuScraper extends EbookScraper {
 	// --------------------------------------
 
 	public String parseAuthor(Document document) {
-		String author = null;
-		try {
-			author = document.selectFirst(AUTHOR_SELECTOR_WITH_LINK).text();
-		} catch (NullPointerException e) {
-			author = document.selectFirst(AUTHOR_SELECTOR_WITHOUT_LINK).text().substring(3);
+		String author = document.selectFirst(AUTHOR_SELECTOR).text();
+		if (author.startsWith("作者：")) {
+			author = author.substring(3);
 		}
 		return author;
-
 	}
 
 	public String parseStoryTitle(Document document) {
@@ -159,14 +155,14 @@ public class SyosetsuScraper extends EbookScraper {
 	}
 
 	public Map<Integer, List<String>> parseChapterUrlsByVolume(Document document) {
-		Map<Integer, List<String>> volumes = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> volumes = new HashMap<>();
 		Elements elements = document.selectFirst(CHAPTER_URLS_CONTAINER).children();
-		for (int i = 0; i < elements.size(); i++) {
-			if (elements.get(i).is(VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
-				volumes.put(volumes.size() + 1, new ArrayList<String>());
-			} else if (elements.get(i).is(CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
-				Element element = elements.get(i).selectFirst(CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER);
-				String url = parseChapterUrl(element);
+		for (Element element : elements) {
+			if (element.is(VOLUME_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
+				volumes.put(volumes.size() + 1, new ArrayList<>());
+			} else if (element.is(CHAPTER_TITLE_CONTAINER_SELECTOR_IN_CHAPTER_URL_CONTAINER)) {
+				Element chapterUrlElement = element.selectFirst(CHAPTER_TITLE_SELECTOR_IN_CHAPTER_URL_CONTAINER);
+				String url = parseChapterUrl(chapterUrlElement);
 				volumes.get(volumes.size()).add(url); // add to last volume
 			}
 		}
@@ -224,7 +220,7 @@ public class SyosetsuScraper extends EbookScraper {
 		Elements allElements = document.select(CHAPTER_TEXT_SELECTOR).first().children();
 		for (Element element : allElements) {
 			// Remove advertising
-			if (element.className().contains("koukoku")) {
+			if (element.className().contains("ad") || element.className().contains("koukoku")) {
 				continue;
 			}
 

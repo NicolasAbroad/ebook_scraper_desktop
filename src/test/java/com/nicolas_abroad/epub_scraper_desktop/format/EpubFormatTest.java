@@ -100,39 +100,7 @@ public class EpubFormatTest {
 	 */
 	@BeforeClass
 	public static void setUpChapterContent() throws IOException {
-		chapterContent = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n" + "<!DOCTYPE html>\r\n"
-				+ "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" + "<head>\r\n" + "<meta charset=\"utf-8\" />\r\n"
-				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"horizontal.css\" class=\"horizontal\" title=\"horizontal\" />\r\n"
-				+ "<title>共通⑤ 彼女は幼馴染み？</title>\r\n" + "</head>\r\n" + "<body>\r\n" + "<div class=\"novel_bn\">\n"
-				+ "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a></div><div id=\"novel_no\">5/7</div><p class=\"novel_subtitle\">共通⑤ 彼女は幼馴染み？</p><div id=\"novel_honbun\" class=\"novel_view\">\n"
-				+ "<p id=\"L1\">「マグナダリアさん!!」</p>\n" + "<p id=\"L2\">ウラミルヂィが小部屋のドアを蹴破る。</p>\n"
-				+ "<p id=\"L3\"><br></br></p>\n" + "<p id=\"L4\">室内には筋トレ器具のようなものが無数にある。</p>\n"
-				+ "<p id=\"L5\">その中に一人の赤髪の女がいた。</p>\n" + "<p id=\"L6\"><br></br></p>\n"
-				+ "<p id=\"L7\">結われていない長い髪、鎧、背中に剣を背負っている。</p>\n" + "<p id=\"L8\"><br></br></p>\n"
-				+ "<p id=\"L9\">（なんかこいつどっかで見たことあるな）</p>\n" + "<p id=\"L10\">新斗は彼女の顔を見て、何かを思い出した。</p>\n"
-				+ "<p id=\"L11\"><br></br></p>\n" + "<p id=\"L12\">「あんた、俺の幼馴染みじゃないよな？」</p>\n"
-				+ "<p id=\"L13\">彼女の顔が幼馴染みに似ており、念のため確認した新斗。</p>\n" + "<p id=\"L14\"><br></br></p>\n"
-				+ "<p id=\"L15\">「はぁ!?」</p>\n" + "<p id=\"L16\"><br></br></p>\n" + "<p id=\"L17\">（違ったか</p>\n"
-				+ "<p id=\"L18\">…今頃あいつは大企業のOLやってんだろうな）</p>\n" + "<p id=\"L19\"><br></br></p>\n"
-				+ "<p id=\"L20\">「ちょっとウラミルヂィ！誰なのよこいつら!」</p>\n" + "<p id=\"L21\">マグナダリアは新斗達に剣を向けた。</p>\n"
-				+ "<p id=\"L22\"><br></br></p>\n" + "<p id=\"L23\">「剣士マグナダリア殿</p>\n"
-				+ "<p id=\"L24\">私の顔に免じて、許してくれ」</p>\n" + "<p id=\"L25\">ディレスタントが前に出た。</p>\n"
-				+ "<p id=\"L26\"><br></br></p>\n" + "<p id=\"L27\">「ディレスタント女史……」</p>\n"
-				+ "<p id=\"L28\">（よかった…落ち着いてくれた）</p>\n" + "<p id=\"L29\"><br></br></p>\n"
-				+ "<p id=\"L30\">「…って尚更ダメよ!!」</p>\n" + "<p id=\"L31\">マグナダリアは剣を振りかざした。</p>\n"
-				+ "<p id=\"L32\"><br></br></p>\n" + "<p id=\"L33\">「あぶねっ」</p>\n"
-				+ "<p id=\"L34\">「姫様を盾にするなんて、とんだ悪党ね！」</p>\n" + "<p id=\"L35\"><br></br></p>\n"
-				+ "<p id=\"L36\">「あらあら～どうしたんでしょう？」</p>\n" + "<p id=\"L37\">「姫様、危ないので我々は離れていましょう」</p>\n"
-				+ "<p id=\"L38\"><a></a></p>\n" + "<p id=\"L39\"><br></br></p>\n"
-				+ "<p id=\"L40\">ディレスタントはエカドリーユを連れて、外へ避難した。</p>\n" + "<p id=\"L41\"><br></br></p>\n"
-				+ "<p id=\"L42\">「ハアアアアアア」</p>\n" + "<p id=\"L43\">あえて避けられていたマグナダリアの剣は確実に新斗を狙う。</p>\n"
-				+ "<p id=\"L44\"><br></br></p>\n" + "<p id=\"L45\">「やめなさい!」</p>\n" + "<p id=\"L46\"><a></a></p>\n"
-				+ "<p id=\"L47\"><br></br></p>\n" + "<p id=\"L48\">ウラミルヂィが新斗の前に出て、足で剣の中心を蹴り、無数のナイフを投げる。</p>\n"
-				+ "<p id=\"L49\">マグナダリアの腕にはあたらずに、無数のナイフは剣を打撃した。</p>\n" + "<p id=\"L50\">マグナダリアの手から剣が落ちる。</p>\n"
-				+ "<p id=\"L51\"><br></br></p>\n" + "<p id=\"L52\">マグナダリアはようやく話を聞く体制になった。</p>\n"
-				+ "</div><div class=\"novel_bn\">\n"
-				+ "<a class=\"novelview_pager-before\">&#xa0;前へ</a><a class=\"novelview_pager-next\">次へ&#xa0;</a><a>目次</a></div>\r\n"
-				+ "</body>\r\n" + "</html>";
+		chapterContent = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n<!DOCTYPE html>\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta charset=\"utf-8\" />\r\n<link rel=\"stylesheet\" type=\"text/css\" href=\"horizontal.css\" class=\"horizontal\" title=\"horizontal\" />\r\n<title>共通⑤ 彼女は幼馴染み？</title>\r\n</head>\r\n<body>\r\n<div class=\"c-pager c-pager--center\">\n<a class=\"c-pager__item c-pager__item--before\">前へ</a><a class=\"c-pager__item c-pager__item--next\">次へ</a></div><div class=\"p-novel__number js-siori\">5/7</div><h1 class=\"p-novel__title p-novel__title--rensai\">共通⑤ 彼女は幼馴染み？</h1><div class=\"p-novel__body\">\n\n<div class=\"js-novel-text p-novel__text\">\n<p id=\"L1\">「マグナダリアさん!!」</p>\n<p id=\"L2\">ウラミルヂィが小部屋のドアを蹴破る。</p>\n<p id=\"L3\"><br></br></p>\n<p id=\"L4\">室内には筋トレ器具のようなものが無数にある。</p>\n<p id=\"L5\">その中に一人の赤髪の女がいた。</p>\n<p id=\"L6\"><br></br></p>\n<p id=\"L7\">結われていない長い髪、鎧、背中に剣を背負っている。</p>\n<p id=\"L8\"><br></br></p>\n<p id=\"L9\">（なんかこいつどっかで見たことあるな）</p>\n<p id=\"L10\">新斗は彼女の顔を見て、何かを思い出した。</p>\n<p id=\"L11\"><br></br></p>\n<p id=\"L12\">「あんた、俺の幼馴染みじゃないよな？」</p>\n<p id=\"L13\">彼女の顔が幼馴染みに似ており、念のため確認した新斗。</p>\n<p id=\"L14\"><br></br></p>\n<p id=\"L15\">「はぁ!?」</p>\n<p id=\"L16\"><br></br></p>\n<p id=\"L17\">（違ったか</p>\n<p id=\"L18\">…今頃あいつは大企業のOLやってんだろうな）</p>\n<p id=\"L19\"><br></br></p>\n<p id=\"L20\">「ちょっとウラミルヂィ！誰なのよこいつら!」</p>\n<p id=\"L21\">マグナダリアは新斗達に剣を向けた。</p>\n<p id=\"L22\"><br></br></p>\n<p id=\"L23\">「剣士マグナダリア殿</p>\n<p id=\"L24\">私の顔に免じて、許してくれ」</p>\n<p id=\"L25\">ディレスタントが前に出た。</p>\n<p id=\"L26\"><br></br></p>\n<p id=\"L27\">「ディレスタント女史……」</p>\n<p id=\"L28\">（よかった…落ち着いてくれた）</p>\n<p id=\"L29\"><br></br></p>\n<p id=\"L30\">「…って尚更ダメよ!!」</p>\n<p id=\"L31\">マグナダリアは剣を振りかざした。</p>\n<p id=\"L32\"><br></br></p>\n<p id=\"L33\">「あぶねっ」</p>\n<p id=\"L34\">「姫様を盾にするなんて、とんだ悪党ね！」</p>\n<p id=\"L35\"><br></br></p>\n<p id=\"L36\">「あらあら～どうしたんでしょう？」</p>\n<p id=\"L37\">「姫様、危ないので我々は離れていましょう」</p>\n<p id=\"L38\"><a></a></p>\n<p id=\"L39\"><br></br></p>\n<p id=\"L40\">ディレスタントはエカドリーユを連れて、外へ避難した。</p>\n<p id=\"L41\"><br></br></p>\n<p id=\"L42\">「ハアアアアアア」</p>\n<p id=\"L43\">あえて避けられていたマグナダリアの剣は確実に新斗を狙う。</p>\n<p id=\"L44\"><br></br></p>\n<p id=\"L45\">「やめなさい!」</p>\n<p id=\"L46\"><a></a></p>\n<p id=\"L47\"><br></br></p>\n<p id=\"L48\">ウラミルヂィが新斗の前に出て、足で剣の中心を蹴り、無数のナイフを投げる。</p>\n<p id=\"L49\">マグナダリアの腕にはあたらずに、無数のナイフは剣を打撃した。</p>\n<p id=\"L50\">マグナダリアの手から剣が落ちる。</p>\n<p id=\"L51\"><br></br></p>\n<p id=\"L52\">マグナダリアはようやく話を聞く体制になった。</p>\n</div>\n</div><div class=\"c-pager c-pager--center\">\n<a class=\"c-pager__item c-pager__item--before\">前へ</a><a class=\"c-pager__item c-pager__item--next\">次へ</a><a class=\"c-pager__item\">目次</a></div>\r\n</body>\r\n</html>";
 	}
 
 	/**
@@ -604,7 +572,7 @@ public class EpubFormatTest {
 
 		File epubFile = epubPath.toFile();
 		EpubCheck epubcheck = new EpubCheck(epubFile);
-		assertTrue(epubcheck.validate());
+		assertEquals(0, epubcheck.doValidate());
 
 		epubFile.delete();
 	}
@@ -621,7 +589,7 @@ public class EpubFormatTest {
 		Path epubPath = Paths.get(System.getProperty("user.dir") + "\\" + edgeCaseVolume.getTitle() + ".epub");
 		File epubFile = epubPath.toFile();
 		EpubCheck epubcheck = new EpubCheck(epubFile);
-		assertTrue(epubcheck.validate());
+		assertEquals(0, epubcheck.doValidate());
 
 		epubFile.delete();
 	}

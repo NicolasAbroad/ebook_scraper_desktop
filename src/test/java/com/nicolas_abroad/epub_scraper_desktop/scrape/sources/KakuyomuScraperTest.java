@@ -48,7 +48,7 @@ public class KakuyomuScraperTest {
 	/** Test parse author method on page without author link. */
 	@Test
 	public void testParseAuthor01() throws Exception {
-		String expected = "尾岡れき";
+		String expected = "尾岡れき@猫部";
 		String actual = scraper.parseAuthor(noVolumeDocument);
 		assertEquals(expected, actual);
 	}

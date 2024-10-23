@@ -520,7 +520,6 @@ public class EpubFormat implements EbookFormat {
 		sb.append(CHAPTER_TEXT_BODY_BOTTOM);
 
 		return sb.toString();
-
 	}
 
 	/**
