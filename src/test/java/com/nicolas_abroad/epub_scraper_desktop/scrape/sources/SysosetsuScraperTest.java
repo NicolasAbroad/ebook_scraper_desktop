@@ -27,6 +27,8 @@ public class SysosetsuScraperTest {
 
 	private static Document volumeDocument;
 
+	private static Document multiplePageVolumeDocument;
+
 	private static Document chapter;
 
 	/**
@@ -35,9 +37,10 @@ public class SysosetsuScraperTest {
 	 * @throws IOException
 	 */
 	@BeforeClass
-	public static void setUp() throws IOException {
+	public static void setUp() throws Exception {
 		noVolumeDocument = scraper.parseHTMLDocument("https://ncode.syosetu.com/n0286ee/");
 		volumeDocument = scraper.parseHTMLDocument("https://ncode.syosetu.com/n1419y/");
+		multiplePageVolumeDocument = scraper.parseHTMLDocument("https://ncode.syosetu.com/n9806fw/");
 		chapter = scraper.parseHTMLDocument("https://ncode.syosetu.com/n7594ct/1/");
 	}
 
@@ -121,7 +124,7 @@ public class SysosetsuScraperTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testParseChapterTitle02() throws IOException {
+	public void testParseChapterTitle02() throws Exception {
 		Document document = scraper.parseHTMLDocument("https://ncode.syosetu.com/n1217et/212/");
 		// 210話 高月マコトは、……
 		String expected = "210話　高月マコトは、……";
@@ -136,7 +139,7 @@ public class SysosetsuScraperTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testParseChapterTitle03() throws IOException {
+	public void testParseChapterTitle03() throws Exception {
 		Document document = scraper.parseHTMLDocument("https://ncode.syosetu.com/n0610eg/283/");
 		// 『書籍化記念&一周年』学園都市でのやりとり『閑話』
 		String expected = "『書籍化記念&amp;一周年』学園都市でのやりとり『閑話』";
@@ -151,7 +154,7 @@ public class SysosetsuScraperTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testParseChapterTitle04() throws IOException {
+	public void testParseChapterTitle04() throws Exception {
 		Document document = scraper.parseHTMLDocument("https://ncode.syosetu.com/n6681fa/57/");
 		// 57 第6話06：Chase & AVENGE!!
 		String expected = "57　第6話06：Chase &amp; AVENGE!!";
@@ -215,7 +218,7 @@ public class SysosetsuScraperTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testParseChapterText02() throws IOException {
+	public void testParseChapterText02() throws Exception {
 		Document document = scraper.parseHTMLDocument("https://ncode.syosetu.com/n5464di/5/");
 		String expected = "<div class=\"c-pager c-pager--center\">\n" +
 				"<a class=\"c-pager__item c-pager__item--before\">前へ</a><a class=\"c-pager__item c-pager__item--next\">次へ</a></div><div class=\"p-novel__number js-siori\">5/7</div><h1 class=\"p-novel__title p-novel__title--rensai\">共通⑤ 彼女は幼馴染み？</h1><div class=\"p-novel__body\">\n" +
@@ -296,48 +299,18 @@ public class SysosetsuScraperTest {
 
 	/** Test parsing chapters' urls by volume. */
 	@Test
-	public void testParseChaptersByVolume() {
+	public void testParseChaptersByVolume01() {
+		String baseUrl = "https://ncode.syosetu.com/n1419y/%d/";
 		// prepare expected map
 		Map<Integer, List<String>> expected = new HashMap<>();
-		List<String> volume1 = new ArrayList<>();
-		volume1.add("https://ncode.syosetu.com/n1419y/1/");
-		List<String> volume2 = new ArrayList<>();
-		volume2.add("https://ncode.syosetu.com/n1419y/2/");
-		volume2.add("https://ncode.syosetu.com/n1419y/3/");
-		volume2.add("https://ncode.syosetu.com/n1419y/4/");
-		volume2.add("https://ncode.syosetu.com/n1419y/5/");
-		List<String> volume3 = new ArrayList<>();
-		volume3.add("https://ncode.syosetu.com/n1419y/6/");
-		volume3.add("https://ncode.syosetu.com/n1419y/7/");
-		volume3.add("https://ncode.syosetu.com/n1419y/8/");
-		volume3.add("https://ncode.syosetu.com/n1419y/9/");
-		List<String> volume4 = new ArrayList<>();
-		volume4.add("https://ncode.syosetu.com/n1419y/10/");
-		volume4.add("https://ncode.syosetu.com/n1419y/11/");
-		volume4.add("https://ncode.syosetu.com/n1419y/12/");
-		volume4.add("https://ncode.syosetu.com/n1419y/13/");
-		volume4.add("https://ncode.syosetu.com/n1419y/14/");
-		volume4.add("https://ncode.syosetu.com/n1419y/15/");
-		volume4.add("https://ncode.syosetu.com/n1419y/16/");
-		volume4.add("https://ncode.syosetu.com/n1419y/17/");
-		List<String> volume5 = new ArrayList<>();
-		volume5.add("https://ncode.syosetu.com/n1419y/18/");
-		volume5.add("https://ncode.syosetu.com/n1419y/19/");
-		volume5.add("https://ncode.syosetu.com/n1419y/20/");
-		volume5.add("https://ncode.syosetu.com/n1419y/21/");
-		volume5.add("https://ncode.syosetu.com/n1419y/22/");
-		List<String> volume6 = new ArrayList<>();
-		volume6.add("https://ncode.syosetu.com/n1419y/23/");
-		volume6.add("https://ncode.syosetu.com/n1419y/24/");
-		volume6.add("https://ncode.syosetu.com/n1419y/25/");
-		volume6.add("https://ncode.syosetu.com/n1419y/26/");
-		volume6.add("https://ncode.syosetu.com/n1419y/27/");
-		List<String> volume7 = new ArrayList<>();
-		volume7.add("https://ncode.syosetu.com/n1419y/28/");
-		volume7.add("https://ncode.syosetu.com/n1419y/29/");
-		volume7.add("https://ncode.syosetu.com/n1419y/30/");
-		List<String> volume8 = new ArrayList<>();
-		volume8.add("https://ncode.syosetu.com/n1419y/31/");
+		List<String> volume1 = generateUrlRange(baseUrl, 1, 1);
+		List<String> volume2 = generateUrlRange(baseUrl, 2, 5);
+		List<String> volume3 = generateUrlRange(baseUrl, 6, 9);
+		List<String> volume4 = generateUrlRange(baseUrl, 10, 17);
+		List<String> volume5 = generateUrlRange(baseUrl, 18, 22);
+		List<String> volume6 = generateUrlRange(baseUrl, 23, 27);
+		List<String> volume7 = generateUrlRange(baseUrl, 28, 30);
+		List<String> volume8 = generateUrlRange(baseUrl, 31, 31);
 		expected.put(1, volume1);
 		expected.put(2, volume2);
 		expected.put(3, volume3);
@@ -349,6 +322,46 @@ public class SysosetsuScraperTest {
 
 		Map<Integer, List<String>> actual = scraper.parseChapterUrlsByVolume(volumeDocument);
 		assertEquals(expected, actual);
+	}
+
+	/** Test parsing chapters' urls by volume. */
+	@Test
+	public void testParseChaptersByVolume02() {
+		String baseUrl = "https://ncode.syosetu.com/n9806fw/%d/";
+		// prepare expected map
+		Map<Integer, List<String>> expected = new HashMap<>();
+		List<String> volume1 = generateUrlRange(baseUrl, 1, 15);
+		List<String> volume2 = generateUrlRange(baseUrl, 16, 28);
+		List<String> volume3 = generateUrlRange(baseUrl, 29, 41);
+		List<String> volume4 = generateUrlRange(baseUrl, 42, 54);
+		List<String> volume5 = generateUrlRange(baseUrl, 55, 70);
+		List<String> volume6 = generateUrlRange(baseUrl, 71, 93);
+		List<String> volume7 = generateUrlRange(baseUrl, 94, 112);
+		List<String> volume8 = generateUrlRange(baseUrl, 113, 128);
+		List<String> volume9 = generateUrlRange(baseUrl, 129, 140);
+		List<String> volume10 = generateUrlRange(baseUrl, 141, 158);
+		expected.put(1, volume1);
+		expected.put(2, volume2);
+		expected.put(3, volume3);
+		expected.put(4, volume4);
+		expected.put(5, volume5);
+		expected.put(6, volume6);
+		expected.put(7, volume7);
+		expected.put(8, volume8);
+		expected.put(9, volume9);
+		expected.put(10, volume10);
+
+		Map<Integer, List<String>> actual = scraper.parseChapterUrlsByVolume(multiplePageVolumeDocument);
+		assertEquals(expected, actual);
+	}
+
+	private List<String> generateUrlRange(String baseUrl, int start, int end) {
+		List<String> urls = new ArrayList<>();
+		for (int i = start; i <= end; i++) {
+			String url = String.format(baseUrl, i);
+			urls.add(url);
+		}
+		return urls;
 	}
 
 	/** Test parsing chapter's number. */

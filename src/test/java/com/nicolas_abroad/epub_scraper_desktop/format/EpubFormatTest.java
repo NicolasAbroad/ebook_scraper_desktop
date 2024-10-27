@@ -55,7 +55,7 @@ public class EpubFormatTest {
 	 * @throws IOException
 	 */
 	@BeforeClass
-	public static void setUp() throws IOException {
+	public static void setUp() throws Exception {
 		List<String> chapterUrls = new ArrayList<String>();
 		chapterUrls.add("https://ncode.syosetu.com/n5464di/1/");
 		chapterUrls.add("https://ncode.syosetu.com/n5464di/2/");

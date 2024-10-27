@@ -116,7 +116,7 @@ public class KakuyomuScraper extends EbookScraper {
 	}
 
 	public Map<Integer, List<String>> parseChapterUrlsByVolume(Document document) throws Exception {
-		Map<Integer, List<String>> volumes = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> volumes = new HashMap<>();
 		List<String> urls = null;
 		List<String> subtitleUrls = new ArrayList<>();
 

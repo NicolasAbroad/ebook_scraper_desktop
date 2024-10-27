@@ -74,7 +74,7 @@ public class Chapter {
 	 *
 	 * @throws IOException
 	 */
-	public void generate() throws IOException {
+	public void generate() throws Exception {
 		Document document = scraper.parseHTMLDocument(url);
 		this.chapterTitle = scraper.parseChapterTitle(document);
 		this.text = scraper.parseChapterText(document);

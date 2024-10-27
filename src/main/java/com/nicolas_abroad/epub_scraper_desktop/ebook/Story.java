@@ -22,7 +22,7 @@ public class Story {
 
 	private Map<Integer, List<String>> volumeUrls;
 
-	private List<Volume> volumes = new ArrayList<Volume>();
+	private List<Volume> volumes = new ArrayList<>();
 
 	private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*&]";
 
@@ -47,7 +47,7 @@ public class Story {
 		if (scraper.hasVolumes(document)) {
 			this.volumeUrls = scraper.parseChapterUrlsByVolume(document);
 		} else {
-			this.volumeUrls = new HashMap<Integer, List<String>>();
+			this.volumeUrls = new HashMap<>();
 			this.volumeUrls.put(1, scraper.parseAllChapterUrls(document));
 		}
 	}

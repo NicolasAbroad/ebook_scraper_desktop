@@ -21,7 +21,7 @@ public abstract class EbookScraper {
 	 * @return HTML document
 	 * @throws IOException
 	 */
-	public abstract Document parseHTMLDocument(String url) throws IOException;
+	public abstract Document parseHTMLDocument(String url) throws Exception;
 
 	/**
 	 * Parse author.

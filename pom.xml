@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>org.w3c</groupId>
 			<artifactId>epubcheck</artifactId>
-			<version>4.2.6</version>
+			<version>5.1.0</version>
 		</dependency>
 
 		<!-- Jackson -->

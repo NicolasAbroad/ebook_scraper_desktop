@@ -13,12 +13,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.nicolas_abroad.epub_scraper_desktop.input.InputConstants.SYSOSETSU_URL_CHAPTER_REGEX;
+import static com.nicolas_abroad.epub_scraper_desktop.input.InputConstants.SYSOSETSU_URL_MULTIPAGE_REGEX;
 
 /**
  * Ebook scraper for syosetsu.com
@@ -31,8 +33,8 @@ public class SyosetsuScraper extends EbookScraper {
 	private static final String BASE_URL = "https://ncode.syosetu.com";
 
 	// Pagination parsing
-	private static final String PAGINATION_BAR = "div.novelview_pager-box";
-	private static final String PAGINATION_LAST_PAGE = "a.novelview_pager-last";
+	private static final String PAGINATION_BAR = ".c-pager";
+	private static final String PAGINATION_LAST_PAGE = "a.c-pager__item--last";
 
 	// Author parsing
 	private static final String AUTHOR_SELECTOR = ".p-novel > .p-novel__author";
@@ -59,7 +61,7 @@ public class SyosetsuScraper extends EbookScraper {
 	// General Parsing
 	// --------------------------------------
 
-	public Document parseHTMLDocument(String url) throws IOException {
+	public Document parseHTMLDocument(String url) throws Exception {
 		Connection connection = Jsoup.connect(url).method(Method.GET);
 		if (this.sessionId != null && !this.sessionId.isEmpty()) {
 			set18PlusCookies(connection);
@@ -88,6 +90,15 @@ public class SyosetsuScraper extends EbookScraper {
 		settings.indentAmount(0);
 		settings.charset("UTF-8");
 		document.outputSettings(settings);
+
+		// Merge all pages if main index page
+		if (!url.matches(SYSOSETSU_URL_MULTIPAGE_REGEX) && !url.matches(SYSOSETSU_URL_CHAPTER_REGEX)) {
+			Integer lastPageNumber = getLastPageNumber(document);
+			if (lastPageNumber != null) {
+				scrapeAllIndexes(document, lastPageNumber);
+			}
+		}
+
 		return document;
 	}
 
@@ -122,11 +133,6 @@ public class SyosetsuScraper extends EbookScraper {
 	}
 
 	public boolean hasVolumes(Document document) throws Exception {
-		Integer lastPageNumber = getLastPageNumber(document);
-		if (lastPageNumber != null) {
-			scrapeAllIndexes(document, lastPageNumber);
-		}
-
 		try {
 			document.selectFirst(VOLUME_TITLES_SELECTOR).hasText();
 		} catch (NullPointerException e) {
@@ -181,18 +187,17 @@ public class SyosetsuScraper extends EbookScraper {
 		String lastPageURL = paginationBar.selectFirst(PAGINATION_LAST_PAGE).attr("href");
 		int paramsIndex = lastPageURL.indexOf("?") + 1;
 
-		List<NameValuePair> params = URLEncodedUtils.parse(lastPageURL.substring(paramsIndex),
-				Charset.forName("UTF-8"));
+		List<NameValuePair> params = URLEncodedUtils.parse(lastPageURL.substring(paramsIndex), StandardCharsets.UTF_8);
 
 		String lastPageNumber = params.stream().filter(p -> "p".equals(p.getName())).findFirst().get().getValue();
 		return Integer.parseInt(lastPageNumber);
 	}
 
 	private void scrapeAllIndexes(Document document, Integer lastPageNumber) throws Exception {
-		for (Integer i = 2; i <= lastPageNumber; i++) {
+		for (int i = 2; i <= lastPageNumber; i++) {
 			// Build url with page number as parameter
 			URIBuilder uriBuilder = new URIBuilder(document.location());
-			uriBuilder.addParameter("p", i.toString());
+			uriBuilder.addParameter("p", Integer.toString(i));
 
 			// Scrape index entries
 			Document page = parseHTMLDocument(uriBuilder.build().toString());

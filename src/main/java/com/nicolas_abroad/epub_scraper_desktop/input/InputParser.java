@@ -7,6 +7,9 @@ import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.nicolas_abroad.epub_scraper_desktop.input.InputConstants.KAKUYOMU_URL_REGEX;
+import static com.nicolas_abroad.epub_scraper_desktop.input.InputConstants.SYSOSETSU_URL_REGEX;
+
 /**
  * User input parsing.
  *
@@ -15,8 +18,6 @@ import java.util.regex.Pattern;
 public class InputParser {
 
 	private static InputParser singleton = new InputParser();
-	private static final String SYSOSETSU_URL_REGEX = "^((https://)||(http://))?((ncode|novel18).syosetu.com/n)(\\d{4})([a-z]{1,2})(/)?$";
-	private static final String KAKUYOMU_URL_REGEX = "^((https://)||(http://))?(kakuyomu.jp/works/)(\\d{19,20})(/)?$";
 
 	private UrlScraperEnum urlScraper;
 

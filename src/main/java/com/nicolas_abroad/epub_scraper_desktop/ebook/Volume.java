@@ -17,7 +17,7 @@ public class Volume {
 
 	private List<String> chapterUrls;
 
-	private List<Chapter> chapters = new ArrayList<Chapter>();
+	private List<Chapter> chapters = new ArrayList<>();
 
 	private String author;
 
@@ -104,7 +104,7 @@ public class Volume {
 	 *
 	 * @throws IOException
 	 */
-	public void generate() throws IOException {
+	public void generate() throws Exception {
 		for (String url : chapterUrls) {
 			Chapter chapter = new Chapter(scraper, url);
 			chapter.generate();
