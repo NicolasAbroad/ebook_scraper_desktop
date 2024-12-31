@@ -46,6 +46,24 @@
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- annotationProcessorPaths requires maven-compiler-plugin version 3.5 or higher -->
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>info.picocli</groupId>
+							<artifactId>picocli-codegen</artifactId>
+							<version>4.7.6</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+						<arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -85,5 +103,13 @@
 			<artifactId>httpclient5</artifactId>
 			<version>5.3.1</version>
 		</dependency>
+
+		<!-- Picocli -->
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.6</version>
+		</dependency>
+
 	</dependencies>
 </project>

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * Class for entire story.
@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
  */
 public class Story {
 
-	private EbookScraper scraper;
+	private final EbookScraper scraper;
 
-	private String url;
+	private final String url;
 
 	private Map<Integer, List<String>> volumeUrls;
 
-	private List<Volume> volumes = new ArrayList<>();
+	private final List<Volume> volumes = new ArrayList<>();
 
 	private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*&]";
 
@@ -122,10 +122,9 @@ public class Story {
 		}
 	}
 
-	/** Assign each chapter its number, if chapter number was not scraped. */
+	/** Assign each chapter a number, if chapter number was not scraped. */
 	private void assignNonScrapedChapterNumbers() {
-		List<Chapter> chapters = volumes.stream().map(v -> v.getChapters()).flatMap(List::stream)
-				.collect(Collectors.toList());
+		List<Chapter> chapters = volumes.stream().map(Volume::getChapters).flatMap(List::stream).toList();
 
 		// Check if chapter numbers were scraped
 		long count = chapters.stream().filter(c -> c.getChapterNumber() == -1).count();
@@ -147,17 +146,39 @@ public class Story {
 	 *
 	 * @throws Exception
 	 */
-	public void generate() throws Exception {
+	public void generateAllVolumes() throws Exception {
+		parseAllVolumeInfo();
+		for (Volume volume : volumes) {
+			volume.generate();
+		}
+		assignNonScrapedChapterNumbers();
+	}
+
+	/**
+	 * Generate specified volumes.
+	 *
+	 * @throws Exception
+	 */
+	public void generateSpecifiedVolumes(Set<Integer> targetVolumeNumbers) throws Exception {
+		parseAllVolumeInfo();
+		volumes.removeIf(volume -> {
+			Integer volumeNumber = Integer.parseInt(volume.getVolumeNumber());
+			return !targetVolumeNumbers.contains(volumeNumber);
+		});
+		for (Volume volume : volumes) {
+			volume.generate();
+		}
+		assignNonScrapedChapterNumbers();
+	}
+
+	public List<Volume> parseAllVolumeInfo() throws Exception {
 		Document document = scraper.parseHTMLDocument(url);
 		parseVolumeUrls(document);
 		populateVolumes();
 		assignVolumeNumbers();
 		assignVolumeTitles(document);
 		assignVolumeAuthor(document);
-		for (Volume volume : volumes) {
-			volume.generate();
-		}
-		assignNonScrapedChapterNumbers();
+		return getVolumes();
 	}
 
 	/**
