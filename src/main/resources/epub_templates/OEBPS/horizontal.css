@@ -1,0 +1,15 @@
+html{
+    font-family: 'foobar', "HiraMinProN-W3", "@ＭＳ明朝", serif, sans-serif;
+    font-size: 14pt;
+    margin: auto 1em;
+    padding: 1em 0;
+    max-width: 28em;}
+body{
+    margin: 0;
+}
+h1{
+    font-weight: normal;
+    line-height: 2;
+    font-size: 2em;
+    margin-top: 2em;
+}

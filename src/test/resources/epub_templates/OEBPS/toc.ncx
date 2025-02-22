@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+	<head>
+		<meta name="dtb:depth" content="1"/>
+		<meta name="dtb:totalPageCount" content="0"/>
+		<meta name="dtb:maxPageNumber" content="0"/>
+		<meta name="dtb:uid" content="nicolas 作者 喜びの道"/>
+	</head>
+	<docTitle>
+		<text>01 - 喜びの道</text>
+	</docTitle>
+	<navMap>
+	
+		<navPoint id="c1" playOrder ="1">
+			<navLabel>
+				<text>"c1"</text>
+			</navLabel>
+			<content src="c1.xhtml"/>
+		</navPoint>
+		<navPoint id="c2" playOrder ="2">
+			<navLabel>
+				<text>"c2"</text>
+			</navLabel>
+			<content src="c2.xhtml"/>
+		</navPoint>
+	
+	</navMap>
+</ncx>

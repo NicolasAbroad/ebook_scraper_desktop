@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en-US" lang="en-US">
+<head>
+	<title>EPUB 3 Navigation Document</title>
+	<meta charset="utf-8"/>
+	<link rel="horizontal" type="text/css" href="horizontal.css"/>
+</head>
+<body>
+<nav epub:type="toc" id="toc">
+	<ol>
+		<li th:each="chapter : ${volume.chapters}">
+			<a th:href="${'c' + chapter.chapterNumber + '.xhtml'}">
+				[[${chapter.chapterNumber + ' - ' + chapter.title}]]
+			</a>
+		</li>
+	</ol>
+</nav>
+</body>
+</html>
