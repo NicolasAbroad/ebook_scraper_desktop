@@ -8,11 +8,13 @@
 <body>
 <nav epub:type="toc" id="toc">
 	<ol>
-		<li th:each="chapter : ${volume.chapters}">
-			<a th:href="${'c' + chapter.chapterNumber + '.xhtml'}">
+		[# th:each="chapter : ${volume.chapters}"]
+		<li>
+			<a href="[[${'c' + chapter.chapterNumber + '.xhtml'}]]">
 				[[${chapter.chapterNumber + ' - ' + chapter.title}]]
 			</a>
 		</li>
+		[/]
 	</ol>
 </nav>
 </body>

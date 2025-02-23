@@ -14,12 +14,16 @@
         <item href="nav.xhtml" id="nav" media-type="application/xhtml+xml" properties="nav"/>
         <item id="hstyle" href="horizontal.css" media-type="text/css"/>
         <item id="pagetemplate" href="page-template.xpgt" media-type="application/vnd.adobe-page-template+xml"/>
+		
         <item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/>
         <item id="c2" href="c2.xhtml" media-type="application/xhtml+xml"/>
+		
     </manifest>
     <spine toc="ncx" page-progression-direction="rtl">
 		<itemref idref="nav"/>
+		
 		<itemref idref="c1"/>
 		<itemref idref="c2"/>
+		
     </spine>
 </package>

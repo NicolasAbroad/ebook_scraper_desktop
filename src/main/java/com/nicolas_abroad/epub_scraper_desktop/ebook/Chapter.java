@@ -14,14 +14,19 @@ import org.jsoup.nodes.Document;
 @NoArgsConstructor
 public class Chapter {
 
+	/** Scraper */
 	private EbookScraper scraper;
 
+	/** Chapter url */
 	private String url;
 
+	/** Chapter number */
 	private int chapterNumber;
 
+	/** Title */
 	private String title;
 
+	/** Text */
 	private String text;
 
 	/** Create a new chapter with a scraper and a url */

@@ -6,15 +6,13 @@ import com.nicolas_abroad.epub_scraper_desktop.utils.IOUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
-import org.thymeleaf.util.StringUtils;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,22 +23,74 @@ import java.util.zip.ZipOutputStream;
  */
 public class EpubFormat implements EbookFormat {
 
-	private final TemplateEngine xmlTemplateEngine = initTemplateEngine(TemplateMode.XML);
-	private final TemplateEngine textTemplateEngine = initTemplateEngine(TemplateMode.TEXT);
+	private final TemplateEngine textTemplateEngine = initTemplateEngine();
 
 	private static final class ExtensionType {
 		private static final String EPUB = ".epub";
 	}
 
+	private static final String TEMPLATE_FOLDER = "epub_templates/";
+
+	// ----------------------------------------------------------
+	// Utils
+	// ----------------------------------------------------------
+
+	private TemplateEngine initTemplateEngine() {
+		TemplateEngine engine = new TemplateEngine();
+
+		StringTemplateResolver resolver = new StringTemplateResolver();
+		resolver.setTemplateMode(TemplateMode.TEXT);
+		engine.addTemplateResolver(resolver);
+
+		return engine;
+	}
+
+	/** Write file to zip stream */
+	public void writeFileToZip(ZipOutputStream zipOutputStream, String filePath, String fileContent) throws IOException {
+		ZipEntry entry = new ZipEntry(filePath);
+		entry.setMethod(ZipEntry.STORED);
+		byte[] entryBytes = fileContent.getBytes(StandardCharsets.UTF_8);
+		entry.setSize(entryBytes.length);
+		entry.setCrc(IOUtils.calculateCrc(entryBytes));
+		zipOutputStream.putNextEntry(entry);
+		zipOutputStream.write(entryBytes);
+		zipOutputStream.closeEntry();
+	}
+
+	private Context generateContext(Volume volume) {
+		Context context = new Context();
+		context.setVariable("volume", volume);
+		return context;
+	}
+
+	private Context generateContext(Chapter chapter) {
+		Context context = new Context();
+		context.setVariable("chapter", chapter);
+		return context;
+	}
+
+	private void generateFile(ZipOutputStream zipOutputStream, String filePath) throws IOException {
+		String fileContent = IOUtils.getFileContent(TEMPLATE_FOLDER + filePath);
+		writeFileToZip(zipOutputStream, filePath, fileContent);
+	}
+
+	private void generateFile(ZipOutputStream zipOutputStream, String filePath, Context context) throws IOException {
+		String templateFileContent = IOUtils.getFileContent(TEMPLATE_FOLDER + filePath);
+		String fileContent = textTemplateEngine.process(templateFileContent, context);
+		writeFileToZip(zipOutputStream, filePath, fileContent);
+	}
+
 	// ----------------------------------------------------------
 	// file generation
 	// ----------------------------------------------------------
+
 	@Override
 	public void generate(Volume volume) throws IOException {
 		String fileName = volume.getTitle() + ExtensionType.EPUB;
 		File epubFile = new File(fileName);
-		try (ZipOutputStream zipOutputStream = new ZipOutputStream(
-				new BufferedOutputStream(new FileOutputStream(epubFile)))) {
+		try (FileOutputStream fileOutputStream = new FileOutputStream(epubFile);
+			 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+			 ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream)) {
 
 			// generate necessary files
 			generateMimetype(zipOutputStream);
@@ -60,113 +110,55 @@ public class EpubFormat implements EbookFormat {
 		}
 	}
 
-	/** Write file to zip stream */
-	public void writeFileToZip(ZipOutputStream zipOutputStream, File file) throws IOException {
-		writeFileToZip(zipOutputStream, file, "");
-	}
-
-	/** Write file to zip stream */
-	public void writeFileToZip(ZipOutputStream zipOutputStream, File file, String path) throws IOException {
-		String directory = StringUtils.isEmpty(path) ? "" : path + "/";
-		ZipEntry entry = new ZipEntry(directory + file.getName());
-		entry.setMethod(ZipEntry.STORED);
-		byte[] entryBytes = Files.readAllBytes(file.toPath());
-		entry.setSize(entryBytes.length);
-		entry.setCrc(IOUtils.calculateCrc(entryBytes));
-		zipOutputStream.putNextEntry(entry);
-		zipOutputStream.write(entryBytes);
-		zipOutputStream.closeEntry();
-	}
-
-	/** Write file to zip stream */
-	public void writeFileToZip(ZipOutputStream zipOutputStream, String filePath, String fileContent) throws IOException {
-		ZipEntry entry = new ZipEntry(filePath);
-		entry.setMethod(ZipEntry.STORED);
-		byte[] entryBytes = fileContent.getBytes(StandardCharsets.UTF_8);
-		entry.setSize(entryBytes.length);
-		entry.setCrc(IOUtils.calculateCrc(entryBytes));
-		zipOutputStream.putNextEntry(entry);
-		zipOutputStream.write(entryBytes);
-		zipOutputStream.closeEntry();
-	}
-
-	private TemplateEngine initTemplateEngine(TemplateMode templateMode) {
-		TemplateEngine engine = new TemplateEngine();
-
-		FileTemplateResolver resolver = new FileTemplateResolver();
-		resolver.setTemplateMode(templateMode);
-		resolver.setCharacterEncoding("UTF-8");
-		engine.addTemplateResolver(resolver);
-
-		return engine;
-	}
-
 	/** Generate mimetype file within zip file */
 	public void generateMimetype(ZipOutputStream zipOutputStream) throws IOException {
-		File file = IOUtils.getResource("epub_templates/mimetype");
-		writeFileToZip(zipOutputStream, file);
+		generateFile(zipOutputStream, "mimetype");
 	}
 
 	/** Generate container file */
 	public void generateContainer(ZipOutputStream zipOutputStream) throws IOException {
-		File file = IOUtils.getResource("epub_templates/META-INF/container.xml");
-		writeFileToZip(zipOutputStream, file, "META-INF");
+		generateFile(zipOutputStream, "META-INF/container.xml");
 	}
 
 	/** Generate content file */
 	public void generateContent(ZipOutputStream zipOutputStream, Volume volume) throws IOException {
+		Context context = generateContext(volume);
 		final String filePath = "OEBPS/content.opf";
-		File file = IOUtils.getResource("epub_templates/" + filePath);
-		Context context = new Context();
-		context.setVariable("volume", volume);
-
-		String fileContent = xmlTemplateEngine.process(file.getPath(), context);
-		writeFileToZip(zipOutputStream, filePath, fileContent);
+		generateFile(zipOutputStream, filePath, context);
 	}
 
 	/** Generate toc file */
 	public void generateToc(ZipOutputStream zipOutputStream, Volume volume) throws IOException {
+		Context context = generateContext(volume);
 		final String filePath = "OEBPS/toc.ncx";
-		File file = IOUtils.getResource("epub_templates/" + filePath);
-		Context context = new Context();
-		context.setVariable("volume", volume);
-
-		String fileContent = textTemplateEngine.process(file.getPath(), context);
-		writeFileToZip(zipOutputStream, filePath, fileContent);
+		generateFile(zipOutputStream, filePath, context);
 	}
 
 	/** Generate a single chapter file */
 	public void generateChapter(ZipOutputStream zipOutputStream, Chapter chapter) throws IOException {
-		File file = IOUtils.getResource("epub_templates/OEBPS/chapter.xhtml");
-		Context context = new Context();
-		context.setVariable("chapter", chapter);
-
+		Context context = generateContext(chapter);
+		final String filePath = "OEBPS/chapter.xhtml";
+		String templateFileContent = IOUtils.getFileContent(TEMPLATE_FOLDER + filePath);
 		String chapterFileName = "OEBPS/c" + chapter.getChapterNumber() + ".xhtml";
-		String fileContent = textTemplateEngine.process(file.getPath(), context);
+		String fileContent = textTemplateEngine.process(templateFileContent, context);
 		writeFileToZip(zipOutputStream, chapterFileName, fileContent);
 	}
 
 	/** Generate css file */
 	public void generateCss(ZipOutputStream zipOutputStream) throws IOException {
-		File file = IOUtils.getResource("epub_templates/OEBPS/horizontal.css");
-		writeFileToZip(zipOutputStream, file, "OEBPS");
+		generateFile(zipOutputStream, "OEBPS/horizontal.css");
 	}
 
 	/** Generate page template file */
 	public void generatePageTemplate(ZipOutputStream zipOutputStream) throws IOException {
-		File file = IOUtils.getResource("epub_templates/OEBPS/page-template.xpgt");
-		writeFileToZip(zipOutputStream, file, "OEBPS");
+		generateFile(zipOutputStream, "OEBPS/page-template.xpgt");
 	}
 
 	/** Generate nav file */
 	public void generateNav(ZipOutputStream zipOutputStream, Volume volume) throws IOException {
+		Context context = generateContext(volume);
 		final String filePath = "OEBPS/nav.xhtml";
-		File file = IOUtils.getResource("epub_templates/" + filePath);
-		Context context = new Context();
-		context.setVariable("volume", volume);
-
-		String fileContent = xmlTemplateEngine.process(file.getPath(), context);
-		writeFileToZip(zipOutputStream, filePath, fileContent);
+		generateFile(zipOutputStream, filePath, context);
 	}
 
 }

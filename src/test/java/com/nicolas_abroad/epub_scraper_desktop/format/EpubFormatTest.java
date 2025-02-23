@@ -4,7 +4,6 @@ import com.adobe.epubcheck.api.EpubCheck;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Chapter;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
 import com.nicolas_abroad.epub_scraper_desktop.utils.IOUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -106,14 +105,6 @@ public class EpubFormatTest {
 		return c;
 	}
 
-//	@AfterClass
-//	public static void cleanUp() throws IOException {
-//		Path volumePath = generateVolumePath(volume);
-//		Path edgeCaseVolumePath = generateVolumePath(edgeCaseVolume);
-//		Files.deleteIfExists(volumePath);
-//		Files.deleteIfExists(edgeCaseVolumePath);
-//	}
-
 	private static Path generateVolumePath(Volume volume) {
 		return Paths.get(System.getProperty("user.dir") + "\\" + volume.getTitle() + ".epub");
 	}
@@ -139,7 +130,6 @@ public class EpubFormatTest {
 					byteArrayOutputStream.flush();
 					byteArrayOutputStream.close();
 					sb.append(byteArrayOutputStream);
-					sb.append(System.lineSeparator());
 				}
 				zipInStream.closeEntry();
 			}
@@ -158,9 +148,8 @@ public class EpubFormatTest {
 			epubFormat.writeFileToZip(zipOutputStream, filePath, fileContent);
 		}
 
-		String expected = fileContent + System.lineSeparator();
 		String actual = readZipFile(epubFile);
-		assertEquals(expected, actual);
+		assertEquals(fileContent, actual);
 	}
 
 	private File executeTarget(FunctionalException.ConsumerWithExceptions<ZipOutputStream, IOException> generator) throws IOException {
@@ -195,8 +184,7 @@ public class EpubFormatTest {
 	public void testGenerateMimetype() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateMimetype);
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/mimetype", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/mimetype-test");
 		assertEquals(expected, actual);
 	}
 
@@ -205,8 +193,7 @@ public class EpubFormatTest {
 	public void testGenerateContainer() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateContainer);
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/META-INF/container.xml", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/META-INF/container-test.xml");
 		assertEquals(expected, actual);
 	}
 
@@ -215,18 +202,16 @@ public class EpubFormatTest {
 	public void testGenerateContent() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateContent, volume);
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/OEBPS/content.opf", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/content-test.opf");
 		assertEquals(expected, actual);
 	}
 
 	/** Test toc file generation */
 	@Test
-	public void testToc() throws IOException {
+	public void testGenerateToc() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateToc, volume);
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/OEBPS/toc.ncx", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/toc-test.ncx");
 		assertEquals(expected, actual);
 	}
 
@@ -235,8 +220,7 @@ public class EpubFormatTest {
 	public void testGenerateChapter() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateChapter, volume.getChapters().getFirst());
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/OEBPS/chapter.xhtml", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/chapter-test.xhtml");
 		assertEquals(expected, actual);
 	}
 
@@ -245,8 +229,25 @@ public class EpubFormatTest {
 	public void testGenerateCss() throws IOException {
 		File epubFile = executeTarget(epubFormat::generateCss);
 		String actual = readZipFile(epubFile);
-		File file = IOUtils.getResource("epub_templates/OEBPS/horizontal.css", "test");
-		String expected = IOUtils.getFileContent(file);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/horizontal-test.css");
+		assertEquals(expected, actual);
+	}
+
+	/** Test page template file generation */
+	@Test
+	public void testGeneratePageTemplate() throws IOException {
+		File epubFile = executeTarget(epubFormat::generatePageTemplate);
+		String actual = readZipFile(epubFile);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/page-template-test.xpgt");
+		assertEquals(expected, actual);
+	}
+
+	/** Test nav file generation */
+	@Test
+	public void testGenerateNav() throws IOException {
+		File epubFile = executeTarget(epubFormat::generateNav, volume);
+		String actual = readZipFile(epubFile);
+		String expected = IOUtils.getFileContent("epub_templates/OEBPS/nav-test.xhtml");
 		assertEquals(expected, actual);
 	}
 

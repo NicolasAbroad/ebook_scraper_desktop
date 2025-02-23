@@ -14,8 +14,14 @@ public class IOUtilsTest extends TestCase {
 
 	public void testGetResourceFileText() throws IOException {
 		File file = IOUtils.getResource("IOUtils/test.txt");
-		String expected = "test12345\r\n";
+		String expected = "test12345";
 		String actual = IOUtils.getFileContent(file);
+		assertEquals(expected, actual);
+	}
+
+	public void testGetFileContent() throws IOException {
+		String expected = "test12345";
+		String actual = IOUtils.getFileContent("IOUtils/test.txt");
 		assertEquals(expected, actual);
 	}
 
