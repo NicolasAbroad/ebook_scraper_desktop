@@ -92,7 +92,7 @@ public class EpubFormatTest {
 		c.setUrl("/" + i + "/");
 		c.setChapterNumber(i);
 		c.setTitle("タイトル " + i);
-		c.setText("<p>テキスト " + i + "</p>\r\n<p>あいうえお</p>");
+		c.setText("<p>テキスト " + i + "</p>" + System.lineSeparator() + "<p>あいうえお</p>");
 		return c;
 	}
 
@@ -101,12 +101,15 @@ public class EpubFormatTest {
 		c.setUrl("/" + i + "/");
 		c.setChapterNumber(i);
 		c.setTitle("&gt;");
-		c.setText("<p>テキスト " + i + "</p>\r\n<p>あいうえお</p>");
+		c.setText("<p>テキスト " + i + "</p>" + System.lineSeparator() + "<p>あいうえお</p>");
 		return c;
 	}
 
 	private static Path generateVolumePath(Volume volume) {
-		return Paths.get(System.getProperty("user.dir") + "\\" + volume.getTitle() + ".epub");
+		Path directoryPath = Paths.get(System.getProperty("user.dir"));
+		Path volumePath = Paths.get(volume.getTitle() + ".epub");
+		File file = new File(directoryPath.toString(), volumePath.toString());
+        return Paths.get(file.getPath());
 	}
 
 	/** Read zip file */
