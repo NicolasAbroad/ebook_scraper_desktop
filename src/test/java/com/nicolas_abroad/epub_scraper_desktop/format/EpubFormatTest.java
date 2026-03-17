@@ -257,7 +257,7 @@ public class EpubFormatTest {
 	/** Test if epub file conforms to official epub specifications */
 	@Test
 	public void testGenerateEpub01() throws IOException {
-		epubFormat.generate(volume);
+		epubFormat.generate(Path.of(""), volume);
 		Path epubPath = generateVolumePath(volume);
 
 		boolean isGenerated = Files.exists(epubPath);
@@ -272,7 +272,7 @@ public class EpubFormatTest {
 	/** Test if edge case epub file conforms to official epub specifications */
 	@Test
 	public void testGenerateEpub02() throws IOException {
-		epubFormat.generate(edgeCaseVolume);
+		epubFormat.generate(Path.of(""), edgeCaseVolume);
 
 		Path epubPath = generateVolumePath(edgeCaseVolume);
 		File epubFile = moveToTmpFolder(epubPath);

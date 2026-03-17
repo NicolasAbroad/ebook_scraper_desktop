@@ -6,6 +6,8 @@ import com.nicolas_abroad.epub_scraper_desktop.format.EbookFormat;
 import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
 import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import com.nicolas_abroad.epub_scraper_desktop.user_interface.MessageEnum;
+import com.nicolas_abroad.epub_scraper_desktop.utils.IOUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -40,20 +42,27 @@ public class ScrapeExecutor {
 
 	public static boolean executeScraping(String url, Set<Integer> targetVolumeNumbers) {
 		try {
-			// Scrape all data from url
+			// Get target volume basic info
 			Story story = generateStory(url);
-			if (targetVolumeNumbers == null) {
-				story.generateAllVolumes();
-			} else {
-				story.generateSpecifiedVolumes(targetVolumeNumbers);
-			}
+			story.parseVolumeInfo(targetVolumeNumbers);
 
-			// Generate volumes from scrapped data
+			// Create output directory
+			Path outputDirectory = IOUtils.createOutputDirectory(story.getVolumes().getFirst().getAuthor());
+
+			// Scrape & generate by volume
 			EbookFormat ebookFormat = new EpubFormat();
 			for (Volume volume : story.getVolumes()) {
+				// Skip scraping & generation if already exists
+				if (IOUtils.exists(outputDirectory, volume.getTitle() + ebookFormat.getFileExtension())) {
+					System.out.println(volume.getTitle() + ": " + MessageEnum.SKIP_GENERATION.getMessage());
+					continue;
+				}
+
+				volume.generate();
 				System.out.println(volume.getTitle());
-				ebookFormat.generate(volume);
+				ebookFormat.generate(outputDirectory, volume);
 			}
+			story.assignNonScrapedChapterNumbers();
 
 			return true;
 		} catch (Exception e) {

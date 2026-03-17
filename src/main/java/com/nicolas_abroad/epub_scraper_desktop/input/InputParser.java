@@ -3,6 +3,8 @@ package com.nicolas_abroad.epub_scraper_desktop.input;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.KakuyomuScraper;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.SyosetsuScraper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,42 +19,21 @@ import static com.nicolas_abroad.epub_scraper_desktop.input.InputConstants.SYSOS
  */
 public class InputParser {
 
-	private static InputParser singleton = new InputParser();
+	private static final InputParser singleton = new InputParser();
 
 	private UrlScraperEnum urlScraper;
 
 	/** Url to scraper enumerator */
+	@AllArgsConstructor
+	@Getter
 	public enum UrlScraperEnum {
 		/** Syosetsu mapper */
 		SYSOSETSU(SYSOSETSU_URL_REGEX, new SyosetsuScraper()),
 		/** Kakuyomu mapper */
 		KAKUYOMU(KAKUYOMU_URL_REGEX, new KakuyomuScraper());
 
-		private String regex;
-		private EbookScraper scraper;
-
-		/**
-		 * Get url regex.
-		 *
-		 * @return url regex
-		 */
-		public String getRegex() {
-			return this.regex;
-		}
-
-		/**
-		 * Get scraper.
-		 *
-		 * @return scraper
-		 */
-		public EbookScraper getEbookScraper() {
-			return this.scraper;
-		}
-
-		UrlScraperEnum(String regex, EbookScraper scraper) {
-			this.regex = regex;
-			this.scraper = scraper;
-		}
+		private final String regex;
+		private final EbookScraper scraper;
 	}
 
 	private InputParser() {
@@ -107,7 +88,7 @@ public class InputParser {
 		if (this.urlScraper == null) {
 			return null;
 		}
-		return this.urlScraper.getEbookScraper();
+		return this.urlScraper.getScraper();
 	}
 
 }

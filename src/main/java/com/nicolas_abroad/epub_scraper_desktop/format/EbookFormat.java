@@ -3,6 +3,7 @@ package com.nicolas_abroad.epub_scraper_desktop.format;
 import com.nicolas_abroad.epub_scraper_desktop.ebook.Volume;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Interface used to generate ebooks, changing based on the format.
@@ -14,9 +15,13 @@ public interface EbookFormat {
 	/**
 	 * Generate ebook.
 	 *
+	 * @param directoryPath
 	 * @param volume
 	 * @throws IOException
 	 */
-	void generate(Volume volume) throws IOException;
+	void generate(Path directoryPath, Volume volume) throws IOException;
+
+	/** Get file extension */
+	String getFileExtension();
 
 }

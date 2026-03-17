@@ -1,6 +1,8 @@
 package com.nicolas_abroad.epub_scraper_desktop.utils;
 
 import com.ibm.icu.impl.data.ResourceReader;
+import com.nicolas_abroad.epub_scraper_desktop.format.EpubFormat;
+import org.apache.commons.codec.binary.Hex;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.zip.CRC32;
 
 public class IOUtils {
@@ -65,6 +70,16 @@ public class IOUtils {
 			content = sb.toString();
 		}
 		return content.trim();
+	}
+
+	public static Path createOutputDirectory(String directoryName) throws IOException {
+		Path directoryPath = Paths.get(directoryName);
+		return Files.createDirectories(directoryPath);
+	}
+
+	public static boolean exists(Path path, String fileName) {
+		Path filePath = path.resolve(fileName);
+        return Files.exists(filePath);
 	}
 
 }

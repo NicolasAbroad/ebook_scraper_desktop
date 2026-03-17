@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class TestConverter implements CommandLine.ITypeConverter<Set<Integer>> {
+public class VolumeInputConverter implements CommandLine.ITypeConverter<Set<Integer>> {
 
 	private static final String NUMBER_SEPARATOR = ",";
 	private static final String SEQUENCE_SEPARATOR = "-";
 
 	@Override
-	public Set<Integer> convert(String value) throws Exception {
+	public Set<Integer> convert(String value) {
 		Set<Integer> set = new HashSet<>();
 		String[] values = value.split(NUMBER_SEPARATOR);
 		for (String v : values) {

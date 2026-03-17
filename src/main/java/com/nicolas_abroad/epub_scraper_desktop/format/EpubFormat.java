@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -85,10 +86,10 @@ public class EpubFormat implements EbookFormat {
 	// ----------------------------------------------------------
 
 	@Override
-	public void generate(Volume volume) throws IOException {
+	public void generate(Path directoryPath, Volume volume) throws IOException {
 		String fileName = volume.getTitle() + ExtensionType.EPUB;
-		File epubFile = new File(fileName);
-		try (FileOutputStream fileOutputStream = new FileOutputStream(epubFile);
+		Path filePath = directoryPath.resolve(fileName);
+		try (FileOutputStream fileOutputStream = new FileOutputStream(filePath.toFile());
 			 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 			 ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream)) {
 
@@ -159,6 +160,11 @@ public class EpubFormat implements EbookFormat {
 		Context context = generateContext(volume);
 		final String filePath = "OEBPS/nav.xhtml";
 		generateFile(zipOutputStream, filePath, context);
+	}
+
+	@Override
+	public String getFileExtension() {
+		return ExtensionType.EPUB;
 	}
 
 }

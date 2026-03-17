@@ -1,9 +1,11 @@
 package com.nicolas_abroad.epub_scraper_desktop.ebook;
 
 import com.nicolas_abroad.epub_scraper_desktop.scrape.sources.EbookScraper;
+import lombok.Getter;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,8 @@ public class Story {
 
 	private Map<Integer, List<String>> volumeUrls;
 
-	private final List<Volume> volumes = new ArrayList<>();
+    @Getter
+    private final List<Volume> volumes = new ArrayList<>();
 
 	private static String TITLE_CLEAN_REGEX = "[<>:\"/\\\\|?*&]";
 
@@ -122,8 +125,28 @@ public class Story {
 		}
 	}
 
+	public List<Volume> parseVolumeInfo(Set<Integer> targetVolumeNumbers) throws Exception {
+		Document document = scraper.parseHTMLDocument(url);
+		parseVolumeUrls(document);
+		populateVolumes();
+		assignVolumeNumbers();
+		assignVolumeTitles(document);
+		assignVolumeAuthor(document);
+		if (targetVolumeNumbers != null && !targetVolumeNumbers.isEmpty()) {
+			volumes.removeIf(volume -> {
+				Integer volumeNumber = Integer.parseInt(volume.getVolumeNumber());
+				return !targetVolumeNumbers.contains(volumeNumber);
+			});
+		}
+		return getVolumes();
+	}
+
+	public List<Volume> parseAllVolumeInfo() throws Exception {
+		return parseVolumeInfo(Collections.emptySet());
+	}
+
 	/** Assign each chapter a number, if chapter number was not scraped. */
-	private void assignNonScrapedChapterNumbers() {
+	public void assignNonScrapedChapterNumbers() {
 		List<Chapter> chapters = volumes.stream().map(Volume::getChapters).flatMap(List::stream).toList();
 
 		// Check if chapter numbers were scraped
@@ -139,55 +162,6 @@ public class Story {
 				chapter.setChapterNumber(i + 1);
 			}
 		}
-	}
-
-	/**
-	 * Generate all volumes.
-	 *
-	 * @throws Exception
-	 */
-	public void generateAllVolumes() throws Exception {
-		parseAllVolumeInfo();
-		for (Volume volume : volumes) {
-			volume.generate();
-		}
-		assignNonScrapedChapterNumbers();
-	}
-
-	/**
-	 * Generate specified volumes.
-	 *
-	 * @throws Exception
-	 */
-	public void generateSpecifiedVolumes(Set<Integer> targetVolumeNumbers) throws Exception {
-		parseAllVolumeInfo();
-		volumes.removeIf(volume -> {
-			Integer volumeNumber = Integer.parseInt(volume.getVolumeNumber());
-			return !targetVolumeNumbers.contains(volumeNumber);
-		});
-		for (Volume volume : volumes) {
-			volume.generate();
-		}
-		assignNonScrapedChapterNumbers();
-	}
-
-	public List<Volume> parseAllVolumeInfo() throws Exception {
-		Document document = scraper.parseHTMLDocument(url);
-		parseVolumeUrls(document);
-		populateVolumes();
-		assignVolumeNumbers();
-		assignVolumeTitles(document);
-		assignVolumeAuthor(document);
-		return getVolumes();
-	}
-
-	/**
-	 * Get volumes.
-	 *
-	 * @return volumes
-	 */
-	public List<Volume> getVolumes() {
-		return volumes;
 	}
 
 }
