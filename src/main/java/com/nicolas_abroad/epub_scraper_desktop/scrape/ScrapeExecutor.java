@@ -31,7 +31,7 @@ public class ScrapeExecutor {
 	/**
 	 * Execute scraping.
 	 *
-	 * @param url
+	 * @param url target url
 	 * @return whether scrapping completed successfully
 	 */
 	public static boolean executeScraping(String url) {
