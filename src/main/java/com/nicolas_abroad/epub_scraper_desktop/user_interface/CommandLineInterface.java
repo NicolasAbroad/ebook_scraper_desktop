@@ -1,5 +1,6 @@
 package com.nicolas_abroad.epub_scraper_desktop.user_interface;
 
+import com.nicolas_abroad.epub_scraper_desktop.configuration.AppConfiguration;
 import com.nicolas_abroad.epub_scraper_desktop.input.InputParser;
 import com.nicolas_abroad.epub_scraper_desktop.input.VolumeInputConverter;
 import com.nicolas_abroad.epub_scraper_desktop.scrape.ScrapeExecutor;
@@ -36,6 +37,8 @@ public class CommandLineInterface implements Callable<Integer> {
 
 	@Override
 	public Integer call() {
+		outputCurrentVersion();
+
 		// Input validation
 		boolean isValidInput = validateInput(targetUrl);
 		if (!isValidInput) {
@@ -74,6 +77,12 @@ public class CommandLineInterface implements Callable<Integer> {
 	private int exitSystem(MessageEnum message) {
 		System.out.println(message.getMessage());
 		return message.getExitCode();
+	}
+
+	private void outputCurrentVersion() {
+		String name = AppConfiguration.getApplicationName();
+		String version = AppConfiguration.getApplicationVersion();
+		System.out.printf((MessageEnum.STARTUP.getMessage()), name, version);
 	}
 
 }

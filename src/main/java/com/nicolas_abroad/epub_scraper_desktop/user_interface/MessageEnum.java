@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum MessageEnum {
+    STARTUP(-1, "Application %s (v%s) started successfully" + System.lineSeparator()),
     SCRAPING(-1, "Please wait a moment while the app is scraping." + System.lineSeparator()),
     SKIP_GENERATION(-1, "Skipping generation as volume already exists"),
     FINISHED_INFO(0, System.lineSeparator() + "The app has finished scraping volume information."),
